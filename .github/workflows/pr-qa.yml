@@ -1,0 +1,28 @@
+name: Quality Assurance
+on:
+  pull_request:
+    types:
+      - opened
+      - ready_for_review
+      - converted_to_draft
+
+jobs:
+  qa-automation:
+    runs-on: ubuntu-latest
+    steps:
+      - name: ready for code review
+        uses: alex-page/github-project-automation-plus@v0.7.1
+        if: ${{ github.event.pull_request.draft == false }}
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          project: "Quality Assurance"
+          column: "🟡 Code review: Ready for review"
+          action: update
+      - name: not ready for code review
+        uses: alex-page/github-project-automation-plus@v0.7.1
+        if: ${{ github.event.pull_request.draft == true }}
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          project: 1
+          column: "⌛Not yet ready for code review"
+          action: update
