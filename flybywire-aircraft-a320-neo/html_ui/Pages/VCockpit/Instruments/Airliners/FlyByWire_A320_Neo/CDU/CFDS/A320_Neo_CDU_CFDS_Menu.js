@@ -1,7 +1,7 @@
 class CDUCfdsMainMenu {
     static ShowPage(mcdu) {
-        mcdu.clearDisplay();
         mcdu.activeSystem = 'CFDS';
+        mcdu.clearDisplay();
         mcdu.setTemplate([
             ["CFDS", "1", "2"],
             [""],

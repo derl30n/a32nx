@@ -1,5 +1,6 @@
 class CDUAtcMenu {
     static ShowPage1(mcdu) {
+        mcdu.activeSystem = "ATSU";
         mcdu.clearDisplay();
         mcdu.setTemplate([
             ["ATC MENU", "1", "2"],
@@ -65,6 +66,8 @@ class CDUAtcMenu {
         mcdu.onNextPage = () => {
             CDUAtcMenu.ShowPage2(mcdu);
         };
+
+        mcdu.addNewMessage(NXFictionalMessages.emptyMessage);
     }
 
     static ShowPage2(mcdu) {

@@ -304,6 +304,7 @@ class A320_Neo_CDU_MainDisplay extends FMCMainDisplay {
             CDUFuelPredPage.ShowPage(this);
         };
         this.onAtc = () => {
+            this.activeSystem = "ATSU";
             CDUAtcMenu.ShowPage1(this);
         };
         this.onMenu = () => {
@@ -770,6 +771,7 @@ class A320_Neo_CDU_MainDisplay extends FMCMainDisplay {
         this.pageRedrawCallback = null;
         this.refreshPageCallback = undefined;
         if (this.page.Current === this.page.MenuPage) {
+            this.page.Current = this.page.Clear;
             this.forceClearScratchpad();
         }
         this.page.Current = this.page.Clear;
@@ -1154,6 +1156,13 @@ class A320_Neo_CDU_MainDisplay extends FMCMainDisplay {
     }
 
     tryShowMessage() {
+        /**
+         * fmgc messages are only allowed to be displayed while the fmgc subsystem is displayed on the mcdu
+         */
+        if (this.activeSystem !== "FMGC" || this.page.Current === this.page.MenuPage) {
+            console.log("FMGC DESELECTED");
+            return;
+        }
         if (!this.isDisplayingErrorMessage && (!this.inOut || this.isDisplayingTypeTwoMessage) && this.messageQueue.length > 0) {
             if (this.messageQueue[0].isResolved(this)) {
                 this.messageQueue.splice(0, 1);
@@ -1188,6 +1197,7 @@ class A320_Neo_CDU_MainDisplay extends FMCMainDisplay {
                 break;
             }
         }
+        console.log("queue remove");
         this.tryShowMessage();
     }
 
