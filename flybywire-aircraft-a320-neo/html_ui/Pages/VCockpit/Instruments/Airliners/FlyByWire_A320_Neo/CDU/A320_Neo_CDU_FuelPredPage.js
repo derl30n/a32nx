@@ -25,15 +25,19 @@ class CDUFuelPredPage {
         let zfwCell = "___._";
         let zfwCgCell = (" __._");
         let zfwColor = "[color]amber";
-        mcdu.onRightInput[2] = async (value, badInputCallback) => {
+        mcdu.onRightInput[2] = async (value, scratchpadCallback) => {
             if (value === "") {
                 mcdu.updateZfwVars();
-                mcdu.setScratchpadText(
+                mcdu.scratchpad.setText(
                     (isFinite(mcdu.zeroFuelWeight) ? (NXUnits.kgToUser(mcdu.zeroFuelWeight)).toFixed(1) : "") +
                     "/" +
                     (isFinite(mcdu.zeroFuelWeightMassCenter) ? mcdu.zeroFuelWeightMassCenter.toFixed(1) : ""));
             } else {
-                mcdu.trySetZeroFuelWeightZFWCG(value, badInputCallback, () => CDUFuelPredPage.ShowPage(mcdu));
+                if (mcdu.trySetZeroFuelWeightZFWCG(value)) {
+                    CDUFuelPredPage.ShowPage(mcdu);
+                } else {
+                    scratchpadCallback(value);
+                }
             }
         };
 
@@ -112,7 +116,13 @@ class CDUFuelPredPage {
                     }
                     finalColor = "[color]cyan";
                 }
-                mcdu.onLeftInput[4] = (value, badInputCallback) => mcdu.trySetRouteFinalFuel(value, badInputCallback, () => CDUFuelPredPage.ShowPage(mcdu));
+                mcdu.onLeftInput[4] = async (value, scratchpadCallback) => {
+                    if (await mcdu.trySetRouteFinalFuel(value)) {
+                        CDUFuelPredPage.ShowPage(mcdu);
+                    } else {
+                        scratchpadCallback(value);
+                    }
+                };
 
                 if (mcdu.altDestination) {
                     if (mcdu._routeAltFuelEntered) {
@@ -137,8 +147,13 @@ class CDUFuelPredPage {
                     altFuelColor = "[color]green";
                     altTimeColor = "{white}";
                 }
-                mcdu.onLeftInput[3] = (value, badInputCallback) => mcdu.trySetRouteAlternateFuel(value, badInputCallback, () => CDUFuelPredPage.ShowPage(mcdu));
-
+                mcdu.onLeftInput[3] = async (value, scratchpadCallback) => {
+                    if (await mcdu.trySetRouteAlternateFuel(value)) {
+                        CDUFuelPredPage.ShowPage(mcdu);
+                    } else {
+                        scratchpadCallback(value);
+                    }
+                };
                 if (mcdu.altDestination) {
                     altIdentCell = mcdu.altDestination.ident;
                     altEFOBCell = (NXUnits.kgToUser(mcdu.getAltEFOB(true))).toFixed(1);
@@ -190,7 +205,13 @@ class CDUFuelPredPage {
                     }
                     rteRSvCellColor = "[color]cyan";
 
-                    mcdu.onLeftInput[2] = (value, badInputCallback) => mcdu.trySetRouteReservedFuel(value, badInputCallback, () => CDUFuelPredPage.ShowPage(mcdu));
+                    mcdu.onLeftInput[2] = async (value, scratchpadCallback) => {
+                        if (await mcdu.trySetRouteReservedFuel(value)) {
+                            CDUFuelPredPage.ShowPage(mcdu);
+                        } else {
+                            scratchpadCallback(value);
+                        }
+                    };
                 }
 
                 if (mcdu._minDestFobEntered) {
@@ -201,8 +222,13 @@ class CDUFuelPredPage {
                     minDestFobCell = "{sp}{sp}{small}" + (NXUnits.kgToUser(mcdu._minDestFob)).toFixed(1) + "{end}";
                     minDestFobCellColor = "[color]cyan";
                 }
-                mcdu.onLeftInput[5] = (value, badInputCallback) => mcdu.trySetMinDestFob(value, badInputCallback, () => CDUFuelPredPage.ShowPage(mcdu));
-
+                mcdu.onLeftInput[5] = async (value, scratchpadCallback) => {
+                    if (await mcdu.trySetMinDestFob(value)) {
+                        CDUFuelPredPage.ShowPage(mcdu);
+                    } else {
+                        scratchpadCallback(value);
+                    }
+                };
                 mcdu.checkEFOBBelowMin();
 
                 extraFuelCell = "{small}" + (NXUnits.kgToUser(mcdu.tryGetExtraFuel(true))).toFixed(1);

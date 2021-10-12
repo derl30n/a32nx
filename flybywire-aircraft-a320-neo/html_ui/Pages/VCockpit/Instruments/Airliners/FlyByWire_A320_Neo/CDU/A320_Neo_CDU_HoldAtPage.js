@@ -70,9 +70,10 @@ class CDUHoldAtPage {
                 ...rows
             ]);
 
-            mcdu.onLeftInput[0] = (value, badInputCallback) => {
+            mcdu.onLeftInput[0] = (value, scratchpadCallback) => {
                 if (isNaN(value) || 0 < value > 360) {
-                    badInputCallback(NXSystemMessages.entryOutOfRange);
+                    mcdu.addNewMessage(NXSystemMessages.entryOutOfRange);
+                    scratchpadCallback(value);
                     return;
                 }
                 mcdu.manualHoldData = {
@@ -84,9 +85,10 @@ class CDUHoldAtPage {
                 CDUHoldAtPage.ShowPage(mcdu, waypoint, waypointIndexFP);
             };
 
-            mcdu.onLeftInput[1] = (value, badInputCallback) => {
+            mcdu.onLeftInput[1] = (value, scratchpadCallback) => {
                 if (value != "L" && value != "R") {
-                    badInputCallback(NXSystemMessages.formatError);
+                    mcdu.addNewMessage(NXSystemMessages.formatError);
+                    scratchpadCallback(value);
                     return;
                 }
                 mcdu.manualHoldData = {
@@ -98,11 +100,12 @@ class CDUHoldAtPage {
                 CDUHoldAtPage.ShowPage(mcdu, waypoint, waypointIndexFP);
             };
 
-            mcdu.onLeftInput[2] = (value, badInputCallback) => {
+            mcdu.onLeftInput[2] = (value, scratchpadCallback) => {
                 if (value.startsWith("/")) {
                     const distComp = value.replace("/", "");
                     if (isNaN(distComp)) {
-                        badInputCallback(NXSystemMessages.formatError);
+                        mcdu.addNewMessage(NXSystemMessages.formatError);
+                        scratchpadCallback(value);
                         return;
                     }
                     mcdu.manualHoldData = {
@@ -117,7 +120,8 @@ class CDUHoldAtPage {
                 }
 
                 if (isNaN(value)) {
-                    badInputCallback(NXSystemMessages.formatError);
+                    mcdu.addNewMessage(NXSystemMessages.formatError);
+                    scratchpadCallback(value);
                     return;
                 }
 

@@ -78,7 +78,15 @@ class CDULateralRevisionPage {
             } else {
                 nextWptLabel = "NEXT WPT{sp}";
                 nextWpt = "[{sp}{sp}{sp}{sp}][color]cyan";
-                mcdu.onRightInput[2] = async (value, badInputCallback) => mcdu.insertWaypoint(value, waypointIndexFP + 1, badInputCallback, () => CDUFlightPlanPage.ShowPage(mcdu));
+                mcdu.onRightInput[2] = async (value, scratchpadCallback) => {
+                    mcdu.insertWaypoint(value, waypointIndexFP + 1, (result) => {
+                        if (result) {
+                            CDUFlightPlanPage.ShowPage(mcdu);
+                        } else {
+                            scratchpadCallback(value);
+                        }
+                    });
+                };
             }
         }
 
@@ -89,7 +97,7 @@ class CDULateralRevisionPage {
                 return mcdu.getDelaySwitchPage();
             };
             mcdu.onLeftInput[2] = () => {
-                mcdu.setScratchpadMessage(NXFictionalMessages.notYetImplemented);
+                mcdu.addNewMessage(NXFictionalMessages.notYetImplemented);
             };
         }
 
