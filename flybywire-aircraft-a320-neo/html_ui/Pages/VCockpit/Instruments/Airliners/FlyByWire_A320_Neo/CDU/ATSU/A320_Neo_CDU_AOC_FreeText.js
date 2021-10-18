@@ -87,17 +87,17 @@ class CDUAocFreeText {
                                 errors += 1;
                                 switch (err.status) {
                                     case 404:
-                                        mcdu._setScratchpadMessage(NXFictionalMessages.recipientNotFound);
+                                        mcdu.setScratchpadMessage(NXFictionalMessages.recipientNotFound);
                                         break;
                                     case 401:
                                     case 403:
-                                        mcdu._setScratchpadMessage(NXFictionalMessages.authErr);
+                                        mcdu.setScratchpadMessage(NXFictionalMessages.authErr);
                                         break;
                                     case 400:
-                                        mcdu._setScratchpadMessage(NXFictionalMessages.invalidMsg);
+                                        mcdu.setScratchpadMessage(NXFictionalMessages.invalidMsg);
                                         break;
                                     default:
-                                        mcdu._setScratchpadMessage(NXFictionalMessages.unknownDownlinkErr);
+                                        mcdu.setScratchpadMessage(NXFictionalMessages.unknownDownlinkErr);
                                 }
                             });
                     }
@@ -132,7 +132,7 @@ class CDUAocFreeText {
                     }, 1000);
                 });
             } else {
-                mcdu._setScratchpadMessage(NXFictionalMessages.telexNotEnabled);
+                mcdu.setScratchpadMessage(NXFictionalMessages.telexNotEnabled);
             }
         };
 

@@ -155,8 +155,8 @@ class A320_Neo_CDU_MainDisplay extends FMCMainDisplay {
         this.onClr = () => this.scratchpad.clear();
         this.onClrHeld = () => this.scratchpad.clearHeld();
         this.onPlusMinus = (defaultKey = "-") => this.scratchpad.plusMinus(defaultKey);
-        this.onLeftFunction = (f) => this.onLsk(this.onLeftInput[f], this.leftInputDelay[f]);
-        this.onRightFunction = (f) => this.onLsk(this.onRightInput[f], this.rightInputDelay[f]);
+        this.onLeftFunction = (f) => this._onLsk(this.onLeftInput[f], this.leftInputDelay[f]);
+        this.onRightFunction = (f) => this._onLsk(this.onRightInput[f], this.rightInputDelay[f]);
 
         const flightNo = SimVar.GetSimVarValue("ATC FLIGHT NUMBER", "string");
         NXApi.connectTelex(flightNo)
@@ -1203,7 +1203,7 @@ class A320_Neo_CDU_MainDisplay extends FMCMainDisplay {
         return false;
     }
 
-    onLsk(fncAction, fncActionDelay = this.getDelayBasic) {
+    _onLsk(fncAction, fncActionDelay = this.getDelayBasic) {
         if (!fncAction) {
             return;
         }
@@ -1221,19 +1221,19 @@ class A320_Neo_CDU_MainDisplay extends FMCMainDisplay {
         }, 100);
     }
 
-    _inputValidation(value, action) {
-        action(
+    _inputValidation(value, inputProcessor) {
+        inputProcessor(
             value,
-            (message) => this._scratchpadCallback(value, message)
+            (message) => this.scratchpadCallback(value, message)
         );
     }
 
-    _scratchpadCallback(value, message) {
-        this._setScratchpadMessage(message);
+    scratchpadCallback(value, message) {
+        this.setScratchpadMessage(message);
         this._setScratchpadUserData(value);
     }
 
-    _setScratchpadMessage(message) {
+    setScratchpadMessage(message) {
         this.scratchpad.setMessage(message);
     }
 
@@ -1241,7 +1241,7 @@ class A320_Neo_CDU_MainDisplay extends FMCMainDisplay {
         this.scratchpad.setUserData(value);
     }
 
-    _removeScratchpadMessage(value) {
+    removeScratchpadMessage(value) {
         this.scratchpad.removeMessage(value);
     }
 

@@ -64,14 +64,7 @@ class CDUVerticalRevisionPage {
             mcdu.onRightInput[0] = () => {}; // EXTRA
             mcdu.onLeftInput[1] = () => {}; // CLB SPD LIM
             mcdu.onRightInput[1] = () => {}; // RTA
-            mcdu.onLeftInput[2] = (value) => {
-                if (isFinite(value)) {
-                    if (value >= 0) {
-                        // NYI
-                    }
-                }
-                mcdu._setScratchpadMessage(NXFictionalMessages.notYetImplemented);
-            }; // SPD CSTR
+            mcdu.onLeftInput[2] = () => mcdu.setScratchpadMessage(NXFictionalMessages.notYetImplemented);
             mcdu.onRightInput[2] = (value, badInputCallback) => {
                 if (value === FMCMainDisplay.clrValue) {
                     mcdu.removeWaypoint(fpIndex, () => {
@@ -117,9 +110,7 @@ class CDUVerticalRevisionPage {
                 CDUWindPage.ShowPage(mcdu);
             }; // WIND
             mcdu.onRightInput[4] = () => {}; // STEP ALTS
-            mcdu.onLeftInput[5] = () => {
-                CDUFlightPlanPage.ShowPage(mcdu);
-            };
+            mcdu.onLeftInput[5] = () => CDUFlightPlanPage.ShowPage(mcdu);
         }
     }
 

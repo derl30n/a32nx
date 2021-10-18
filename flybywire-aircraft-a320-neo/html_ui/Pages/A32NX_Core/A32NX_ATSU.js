@@ -256,7 +256,7 @@ const addWaypointAsync = (fix, mcdu, routeIdent, via) => {
                     res(true);
                 } else {
                     console.log('AWY/WPT MISMATCH ' + routeIdent + " via " + via);
-                    mcdu._setScratchpadMessage(NXSystemMessages.awyWptMismatch);
+                    mcdu.setScratchpadMessage(NXSystemMessages.awyWptMismatch);
                     res(false);
                 }
             });
@@ -275,7 +275,7 @@ const addWaypointAsync = (fix, mcdu, routeIdent, via) => {
                     });
                 } else {
                     console.log('NOT IN DATABASE ' + routeIdent);
-                    mcdu._setScratchpadMessage(NXSystemMessages.notInDatabase);
+                    mcdu.setScratchpadMessage(NXSystemMessages.notInDatabase);
                     res(false);
                 }
             });

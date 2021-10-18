@@ -215,12 +215,7 @@ class CDUFlightPlanPage {
                             CDULateralRevisionPage.ShowPage(mcdu, mcdu.flightPlanManager.getDestination(), mcdu.flightPlanManager.getWaypointsCount() - 1);
                         } else if (value === FMCMainDisplay.clrValue) {
                         } else if (value.length > 0) {
-                            mcdu.insertWaypoint(value, mcdu.flightPlanManager.getWaypointsCount() - 1, (success, badInputMessage) => {
-                                if (!success) {
-                                    badInputCallback(badInputMessage);
-                                }
-                                CDUFlightPlanPage.ShowPage(mcdu, offset);
-                            });
+                            mcdu.insertWaypoint(value, mcdu.flightPlanManager.getWaypointsCount() - 1, badInputCallback, () => CDUFlightPlanPage.ShowPage(mcdu, offset));
                         }
                     };
                 }
@@ -360,12 +355,7 @@ class CDUFlightPlanPage {
                                         CDUFlightPlanPage.ShowPage(mcdu, offset);
                                     });
                                 } else if (value.length > 0) {
-                                    mcdu.insertWaypoint(value, fpIndex, (success, badInputMessage) => {
-                                        if (!success) {
-                                            badInputCallback(badInputMessage);
-                                        }
-                                        CDUFlightPlanPage.ShowPage(mcdu, offset);
-                                    });
+                                    mcdu.insertWaypoint(value, fpIndex, badInputCallback, () => CDUFlightPlanPage.ShowPage(mcdu, offset));
                                 }
                             };
                             mcdu.rightInputDelay[i] = () => {

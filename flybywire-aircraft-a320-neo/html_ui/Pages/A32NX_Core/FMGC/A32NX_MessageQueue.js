@@ -47,7 +47,7 @@ class A32NX_MessageQueue {
                 return this.updateDisplayedMessage();
             }
 
-            this._fmgc._setScratchpadMessage(message);
+            this._fmgc.setScratchpadMessage(message);
         }
     }
 
