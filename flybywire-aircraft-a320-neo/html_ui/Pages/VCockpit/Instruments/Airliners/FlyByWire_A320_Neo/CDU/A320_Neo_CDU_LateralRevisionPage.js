@@ -97,7 +97,7 @@ class CDULateralRevisionPage {
                 return mcdu.getDelaySwitchPage();
             };
             mcdu.onLeftInput[2] = () => {
-                mcdu.scratchpad.setMessage(NXFictionalMessages.notYetImplemented);
+                mcdu._setScratchpadMessage(NXFictionalMessages.notYetImplemented);
             };
         }
 

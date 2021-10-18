@@ -41,7 +41,7 @@ class CDUAocRequestsWeather {
         mcdu.onRightInput[5] = async () => {
             const icaos = mcdu.aocAirportList.icaos;
             if (icaos.length === 0) {
-                mcdu.scratchpad.setMessage(NXFictionalMessages.noAirportSpecified);
+                mcdu._setScratchpadMessage(NXFictionalMessages.noAirportSpecified);
                 return;
             }
             sendStatus = "QUEUED";

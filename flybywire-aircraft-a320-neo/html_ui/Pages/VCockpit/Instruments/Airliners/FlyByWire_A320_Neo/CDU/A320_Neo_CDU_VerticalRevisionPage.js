@@ -70,7 +70,7 @@ class CDUVerticalRevisionPage {
                         // NYI
                     }
                 }
-                mcdu.scratchpad.setMessage(NXFictionalMessages.notYetImplemented);
+                mcdu._setScratchpadMessage(NXFictionalMessages.notYetImplemented);
             }; // SPD CSTR
             mcdu.onRightInput[2] = (value, badInputCallback) => {
                 if (value === FMCMainDisplay.clrValue) {

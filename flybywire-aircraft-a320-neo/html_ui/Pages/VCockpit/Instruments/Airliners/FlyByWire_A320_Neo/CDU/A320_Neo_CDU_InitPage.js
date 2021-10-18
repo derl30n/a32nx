@@ -19,8 +19,7 @@ class CDUInitPage {
                 mcdu.updateFlightNo(
                     value,
                     (badInputMessage) => {
-                        mcdu.scratchpad.setMessage(badInputMessage);
-                        mcdu.scratchpad.setUserData(value);
+                        mcdu._scratchpadCallback(value, badInputMessage);
                     },
                     () => CDUInitPage.ShowPage1(mcdu)
                 );

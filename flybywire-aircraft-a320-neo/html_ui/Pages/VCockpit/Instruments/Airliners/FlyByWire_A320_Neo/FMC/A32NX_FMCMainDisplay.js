@@ -1538,7 +1538,7 @@ class FMCMainDisplay extends BaseAirliners {
             this.clearAutotunedIls();
             if (!this.flightPlanManager.getOrigin()) {
                 // TODO: figure out if message output is needed
-                this.scratchpad.setMessage(NXFictionalMessages.noOriginSet);
+                this._setScratchpadMessage(NXFictionalMessages.noOriginSet);
                 return callback(false);
             } else if (runwayIndex === -1) {
                 this.flightPlanManager.setDepartureRunwayIndex(-1, () => {
@@ -1554,7 +1554,7 @@ class FMCMainDisplay extends BaseAirliners {
                 }
             } else {
                 // TODO: figure out if message output is needed
-                this.scratchpad.setMessage(NXSystemMessages.notInDatabase);
+                this._setScratchpadMessage(NXSystemMessages.notInDatabase);
                 callback(false);
             }
         });

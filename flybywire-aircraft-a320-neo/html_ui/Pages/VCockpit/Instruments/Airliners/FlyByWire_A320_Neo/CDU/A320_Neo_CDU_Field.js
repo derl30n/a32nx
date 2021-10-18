@@ -40,7 +40,7 @@ class CDU_InopField extends CDU_Field {
     }
 
     onSelect() {
-        this.mcdu.scratchpad.setMessage(NXFictionalMessages.notYetImplemented);
+        this.mcdu._setScratchpadMessage(NXFictionalMessages.notYetImplemented);
         super.onSelect();
     }
 
@@ -151,14 +151,12 @@ class CDU_SingleValueField extends CDU_Field {
         if (value === FMCMainDisplay.clrValue) {
             const [success, badInputMessage] = this.clearValue();
             if (!success) {
-                this.mcdu.scratchpad.setMessage(badInputMessage);
-                this.mcdu.scratchpad.setUserData(value);
+                this.mcdu._scratchpadCallback(value, badInputMessage);
             }
         } else {
             const [success, badInputMessage] = this.setValue(value);
             if (!success) {
-                this.mcdu.scratchpad.setMessage(badInputMessage);
-                this.mcdu.scratchpad.setUserData(value);
+                this.mcdu._scratchpadCallback(value, badInputMessage);
             }
         }
         super.onSelect();
