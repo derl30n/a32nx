@@ -60,11 +60,9 @@ class CDUProgressPage {
                 break;
         }
 
-        mcdu.onLeftInput[0] = (value, scratchpadCallback) => {
-            if (mcdu.trySetCruiseFlCheckInput(value)) {
+        mcdu.onLeftInput[0] = (value, badInputCallback) => {
+            if (mcdu.trySetCruiseFlCheckInput(value, badInputCallback)) {
                 CDUProgressPage.ShowPage(mcdu);
-            } else {
-                scratchpadCallback(value);
             }
         };
         mcdu.leftInputDelay[1] = () => {
@@ -89,15 +87,7 @@ class CDUProgressPage {
                 progBearingDist = `{small}{green}\xa0${mcdu.progBearing.toFixed(0).padStart(3, "0")}°\xa0/${mcdu.progDistance.toFixed(distDigits).padStart(3)}{end}{end}`;
             }
         }
-        mcdu.onRightInput[3] = (input, scratchpadCallback) => {
-            mcdu.trySetProgWaypoint(input, (success) => {
-                if (success) {
-                    CDUProgressPage.ShowPage(mcdu);
-                } else {
-                    scratchpadCallback(input);
-                }
-            });
-        };
+        mcdu.onRightInput[3] = (input, badInputCallback) => mcdu.trySetProgWaypoint(input, badInputCallback, () => CDUProgressPage.ShowPage(mcdu));
         mcdu.setTemplate([
             ["{green}" + flightPhase.padStart(15, "\xa0") + "{end}\xa0" + flightNo.padEnd(11, "\xa0")],
             ["\xa0" + "CRZ\xa0", "OPT\xa0\xa0\xa0\xa0REC MAX"],
@@ -126,11 +116,9 @@ class CDUProgressPage {
         if (isFinite(mcdu.cruiseFlightLevel)) {
             altCell = mcdu.cruiseFlightLevel.toFixed(0);
         }
-        mcdu.onRightInput[0] = (value, scratchpadCallback) => {
-            if (mcdu.setCruiseFlightLevelAndTemperature(value)) {
+        mcdu.onRightInput[0] = (value, badInputCallback) => {
+            if (mcdu.setCruiseFlightLevelAndTemperature(value, badInputCallback)) {
                 CDUProgressPage.ShowReportPage(mcdu);
-            } else {
-                scratchpadCallback(value);
             }
         };
         let toWaypoint;

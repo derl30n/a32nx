@@ -112,7 +112,7 @@ class CDUAocRequestsAtis {
         mcdu.onRightInput[5] = async () => {
             const icao = store["arpt1"] || store["arrIcao"];
             if (icao === "") {
-                mcdu.addNewMessage(NXFictionalMessages.noAirportSpecified);
+                mcdu.scratchpad.setMessage(NXFictionalMessages.noAirportSpecified);
                 return;
             }
             store["sendStatus"] = "QUEUED";

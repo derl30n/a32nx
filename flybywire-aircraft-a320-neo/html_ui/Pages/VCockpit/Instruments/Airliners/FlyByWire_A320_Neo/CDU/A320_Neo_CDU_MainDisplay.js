@@ -100,6 +100,8 @@ class A320_Neo_CDU_MainDisplay extends FMCMainDisplay {
     }
 
     initMcduVariables() {
+        this.scratchpad.setText("");
+        // TODO: remove message queue => now fmgc system
         this.messageQueue = [];
         this.aocAirportList.init();
     }
@@ -160,7 +162,7 @@ class A320_Neo_CDU_MainDisplay extends FMCMainDisplay {
         NXApi.connectTelex(flightNo)
             .catch((err) => {
                 if (err !== NXApi.disabledError) {
-                    this.addNewMessage(NXFictionalMessages.fltNbrInUse);
+                    // this.scratchpad.setMessage(NXFictionalMessages.fltNbrInUse);
                 }
             });
 
@@ -1213,11 +1215,21 @@ class A320_Neo_CDU_MainDisplay extends FMCMainDisplay {
             const value = this.scratchpad.removeUserContentFromScratchpadAndDisplayAndReturnTextContent();
             setTimeout(() => {
                 if (this.page.Current === cur) {
-                    fncAction(value, (cachedInput) => this.scratchpad.setUserData(cachedInput));
+                    this._inputValidation(value, fncAction);
+                    // fncAction(value, (cachedInput) => this.scratchpad.setUserData(cachedInput));
                 }
-            // }, Math.max(50, fncActionDelay() - 50));
             }, fncActionDelay());
         }, 100);
+    }
+
+    _inputValidation(value, action) {
+        action(
+            value,
+            (message) => {
+                this.scratchpad.setMessage(message);
+                this.scratchpad.setUserData(value);
+            }
+        );
     }
 
     /* END OF MCDU EVENTS */

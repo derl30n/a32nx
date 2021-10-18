@@ -63,15 +63,14 @@ class CDUPerformancePage {
                     v1Check = `{small}{cyan}${("" + mcdu.v1Speed).padEnd(3)}{end}{end}`;
                 }
             }
-            mcdu.onLeftInput[0] = (value, scratchpadCallback) => {
+            mcdu.onLeftInput[0] = (value, badInputCallback) => {
                 if (value === "") {
                     if (mcdu._v1Checked) {
                         // not real: v-speed helper
                         if (mcdu.flaps) {
                             mcdu.scratchpad.setText(mcdu._getV1Speed().toString());
                         } else {
-                            mcdu.addNewMessage(NXSystemMessages.formatError);
-                            scratchpadCallback(value);
+                            badInputCallback(NXSystemMessages.formatError);
                         }
                     } else {
                         mcdu._v1Checked = true;
@@ -80,10 +79,8 @@ class CDUPerformancePage {
                     }
                     CDUPerformancePage.ShowTAKEOFFPage(mcdu);
                 } else {
-                    if (mcdu.trySetV1Speed(value)) {
+                    if (mcdu.trySetV1Speed(value, badInputCallback)) {
                         CDUPerformancePage.ShowTAKEOFFPage(mcdu);
-                    } else {
-                        scratchpadCallback(value);
                     }
                 }
             };
@@ -95,14 +92,13 @@ class CDUPerformancePage {
                     vRCheck = `{small}{cyan}${("" + mcdu.vRSpeed).padEnd(3)}{end}{end}`;
                 }
             }
-            mcdu.onLeftInput[1] = (value, scratchpadCallback) => {
+            mcdu.onLeftInput[1] = (value, badInputCallback) => {
                 if (value === "") {
                     if (mcdu._vRChecked) {
                         if (mcdu.flaps) {
                             mcdu.scratchpad.setText(mcdu._getVRSpeed().toString());
                         } else {
-                            mcdu.addNewMessage(NXSystemMessages.formatError);
-                            scratchpadCallback(value);
+                            badInputCallback(NXSystemMessages.formatError);
                         }
                     } else {
                         mcdu._vRChecked = true;
@@ -111,10 +107,8 @@ class CDUPerformancePage {
                     }
                     CDUPerformancePage.ShowTAKEOFFPage(mcdu);
                 } else {
-                    if (mcdu.trySetVRSpeed(value)) {
+                    if (mcdu.trySetVRSpeed(value, badInputCallback)) {
                         CDUPerformancePage.ShowTAKEOFFPage(mcdu);
-                    } else {
-                        scratchpadCallback(value);
                     }
                 }
             };
@@ -126,14 +120,13 @@ class CDUPerformancePage {
                     v2Check = `{small}{cyan}${("" + mcdu.v2Speed).padEnd(3)}{end}{end}`;
                 }
             }
-            mcdu.onLeftInput[2] = (value, scratchpadCallback) => {
+            mcdu.onLeftInput[2] = (value, badInputCallback) => {
                 if (value === "") {
                     if (mcdu._v2Checked) {
                         if (mcdu.flaps) {
                             mcdu.scratchpad.setText(mcdu._getV2Speed().toString());
                         } else {
-                            mcdu.addNewMessage(NXSystemMessages.formatError);
-                            scratchpadCallback(value);
+                            badInputCallback(NXSystemMessages.formatError);
                         }
                     } else {
                         mcdu._v2Checked = true;
@@ -142,10 +135,8 @@ class CDUPerformancePage {
                     }
                     CDUPerformancePage.ShowTAKEOFFPage(mcdu);
                 } else {
-                    if (mcdu.trySetV2Speed(value)) {
+                    if (mcdu.trySetV2Speed(value, badInputCallback)) {
                         CDUPerformancePage.ShowTAKEOFFPage(mcdu);
-                    } else {
-                        scratchpadCallback(value);
                     }
                 }
             };
@@ -162,22 +153,19 @@ class CDUPerformancePage {
             if (mcdu.v2Speed) {
                 v2 = `{green}${("" + mcdu.v2Speed).padEnd(3)}{end}`;
             }
-            mcdu.onLeftInput[0] = (value, scratchpadCallback) => {
+            mcdu.onLeftInput[0] = (value, badInputCallback) => {
                 if (value !== "") {
-                    mcdu.addNewMessage(NXSystemMessages.notAllowed);
-                    scratchpadCallback(value);
+                    badInputCallback(NXSystemMessages.notAllowed);
                 }
             };
-            mcdu.onLeftInput[1] = (value, scratchpadCallback) => {
+            mcdu.onLeftInput[1] = (value, badInputCallback) => {
                 if (value !== "") {
-                    mcdu.addNewMessage(NXSystemMessages.notAllowed);
-                    scratchpadCallback(value);
+                    badInputCallback(NXSystemMessages.notAllowed);
                 }
             };
-            mcdu.onLeftInput[2] = (value, scratchpadCallback) => {
+            mcdu.onLeftInput[2] = (value, badInputCallback) => {
                 if (value !== "") {
-                    mcdu.addNewMessage(NXSystemMessages.notAllowed);
-                    scratchpadCallback(value);
+                    badInputCallback(NXSystemMessages.notAllowed);
                 }
             };
         }
@@ -192,11 +180,9 @@ class CDUPerformancePage {
                     transAltCell = `{small}${transAltCell}{end}`;
                 }
             }
-            mcdu.onLeftInput[3] = (value, scratchpadCallback) => {
-                if (mcdu.trySetTakeOffTransAltitude(value)) {
+            mcdu.onLeftInput[3] = (value, badInputCallback) => {
+                if (mcdu.trySetTakeOffTransAltitude(value, badInputCallback)) {
                     CDUPerformancePage.ShowTAKEOFFPage(mcdu);
-                } else {
-                    scratchpadCallback(value);
                 }
             };
         }
@@ -221,11 +207,9 @@ class CDUPerformancePage {
                     acc = `{small}${acc}{end}`;
                 }
                 thrRedAcc = `${thrRed}${acc}[color]cyan`;
-                mcdu.onLeftInput[4] = (value, scratchpadCallback) => {
-                    if (mcdu.trySetThrustReductionAccelerationAltitude(value)) {
+                mcdu.onLeftInput[4] = (value, badInputCallback) => {
+                    if (mcdu.trySetThrustReductionAccelerationAltitude(value, badInputCallback)) {
                         CDUPerformancePage.ShowTAKEOFFPage(mcdu);
-                    } else {
-                        scratchpadCallback(value);
                     }
                 };
             } else {
@@ -291,11 +275,9 @@ class CDUPerformancePage {
             const flaps = !isNaN(mcdu.flaps) ? mcdu.flaps : "[]";
             const ths = formattedThs ? formattedThs : "[\xa0\xa0\xa0]";
             flapsThs = `${flaps}/${ths}[color]cyan`;
-            mcdu.onRightInput[2] = (value, scratchpadCallback) => {
-                if (mcdu.trySetFlapsTHS(value)) {
+            mcdu.onRightInput[2] = (value, badInputCallback) => {
+                if (mcdu.trySetFlapsTHS(value, badInputCallback)) {
                     CDUPerformancePage.ShowTAKEOFFPage(mcdu);
-                } else {
-                    scratchpadCallback(value);
                 }
             };
         } else {
@@ -314,20 +296,10 @@ class CDUPerformancePage {
                     flexTakeOffTempCell = `{small}${mcdu.perfTOTemp.toFixed(0)}{end}${flexTakeOffTempCell}[color]cyan`;
                 }
             }
-            mcdu.onRightInput[3] = (value, scratchpadCallback) => {
-                if (mcdu._toFlexChecked) {
-                    if (mcdu.setPerfTOFlexTemp(value)) {
-                        CDUPerformancePage.ShowTAKEOFFPage(mcdu);
-                    } else {
-                        scratchpadCallback(value);
-                    }
-                } else {
-                    if (value === "" || mcdu.setPerfTOFlexTemp(value)) {
-                        mcdu._toFlexChecked = true;
-                        CDUPerformancePage.ShowTAKEOFFPage(mcdu);
-                    } else {
-                        scratchpadCallback(value);
-                    }
+            mcdu.onRightInput[3] = (value, badInputCallback) => {
+                if (!mcdu._toFlexChecked && value === "" || mcdu.setPerfTOFlexTemp(value, badInputCallback)) {
+                    mcdu._toFlexChecked = true;
+                    CDUPerformancePage.ShowTAKEOFFPage(mcdu);
                 }
             };
         } else {
@@ -352,11 +324,9 @@ class CDUPerformancePage {
                 } else {
                     engOutAcc = "[][color]cyan";
                 }
-                mcdu.onRightInput[4] = (value, scratchpadCallback) => {
-                    if (mcdu.trySetEngineOutAcceleration(value)) {
+                mcdu.onRightInput[4] = (value, badInputCallback) => {
+                    if (mcdu.trySetEngineOutAcceleration(value, badInputCallback)) {
                         CDUPerformancePage.ShowTAKEOFFPage(mcdu);
-                    } else {
-                        scratchpadCallback(value);
                     }
                 };
             } else if (isFinite(mcdu.engineOutAccelerationAltitude)) {
@@ -440,20 +410,16 @@ class CDUPerformancePage {
         } else {
             managedSpeedCell = (isSelected ? "*" : "") + mcdu.managedSpeedClimb > mcdu.managedSpeedLimit ? mcdu.managedSpeedLimit.toFixed(0) : mcdu.managedSpeedClimb.toFixed(0);
 
-            mcdu.onLeftInput[3] = (value, scratchpadCallback) => {
-                if (mcdu.trySetPreSelectedClimbSpeed(value)) {
+            mcdu.onLeftInput[3] = (value, badInputCallback) => {
+                if (mcdu.trySetPreSelectedClimbSpeed(value, badInputCallback)) {
                     CDUPerformancePage.ShowCLBPage(mcdu);
-                } else {
-                    scratchpadCallback(value);
                 }
             };
         }
         const [selectedSpeedTitle, selectedSpeedCell] = CDUPerformancePage.getSelectedTitleAndValue(isPhaseActive, isSelected, mcdu.preSelectedClbSpeed);
-        mcdu.onLeftInput[1] = (value, scratchpadCallback) => {
-            if (mcdu.tryUpdateCostIndex(value)) {
+        mcdu.onLeftInput[1] = (value, badInputCallback) => {
+            if (mcdu.tryUpdateCostIndex(value, badInputCallback)) {
                 CDUPerformancePage.ShowCLBPage(mcdu);
-            } else {
-                scratchpadCallback(value);
             }
         };
         const timeLabel = mcdu.getIsFlying() ? "UTC" : "TIME";
@@ -532,11 +498,9 @@ class CDUPerformancePage {
             managedSpeedCell = (isSelected ? "*" : "") + managedSpeed.toFixed(0);
         }
         const [selectedSpeedTitle, selectedSpeedCell] = CDUPerformancePage.getSelectedTitleAndValue(isPhaseActive, isSelected, mcdu.preSelectedCrzSpeed);
-        mcdu.onLeftInput[1] = (value, scratchpadCallback) => {
-            if (mcdu.tryUpdateCostIndex(value)) {
+        mcdu.onLeftInput[1] = (value, badInputCallback) => {
+            if (mcdu.tryUpdateCostIndex(value, badInputCallback)) {
                 CDUPerformancePage.ShowCRZPage(mcdu);
-            } else {
-                scratchpadCallback(value);
             }
         };
         let timeLabel = "TIME";
@@ -565,11 +529,9 @@ class CDUPerformancePage {
                 };
             }
         } else {
-            mcdu.onLeftInput[3] = (value, scratchpadCallback) => {
-                if (mcdu.trySetPreSelectedCruiseSpeed(value)) {
+            mcdu.onLeftInput[3] = (value, badInputCallback) => {
+                if (mcdu.trySetPreSelectedCruiseSpeed(value, badInputCallback)) {
                     CDUPerformancePage.ShowCRZPage(mcdu);
-                } else {
-                    scratchpadCallback(value);
                 }
             };
             mcdu.onLeftInput[5] = () => {
@@ -651,22 +613,18 @@ class CDUPerformancePage {
                 };
             }
         } else {
-            mcdu.onLeftInput[3] = (value, scratchpadCallback) => {
-                if (mcdu.trySetPreSelectedDescentSpeed(value)) {
+            mcdu.onLeftInput[3] = (value, badInputCallback) => {
+                if (mcdu.trySetPreSelectedDescentSpeed(value, badInputCallback)) {
                     CDUPerformancePage.ShowDESPage(mcdu);
-                } else {
-                    scratchpadCallback(value);
                 }
             };
             mcdu.onLeftInput[5] = () => {
                 CDUPerformancePage.ShowCRZPage(mcdu);
             };
         }
-        mcdu.onLeftInput[1] = (value, scratchpadCallback) => {
-            if (mcdu.tryUpdateCostIndex(value)) {
+        mcdu.onLeftInput[1] = (value, badInputCallback) => {
+            if (mcdu.tryUpdateCostIndex(value, badInputCallback)) {
                 CDUPerformancePage.ShowDESPage(mcdu);
-            } else {
-                scratchpadCallback(value);
             }
         };
         mcdu.rightInputDelay[5] = () => {
@@ -718,11 +676,9 @@ class CDUPerformancePage {
         } else if (closeToDest) {
             qnhCell = "____[color]amber";
         }
-        mcdu.onLeftInput[0] = (value, scratchpadCallback) => {
-            if (mcdu.setPerfApprQNH(value)) {
+        mcdu.onLeftInput[0] = (value, badInputCallback) => {
+            if (mcdu.setPerfApprQNH(value, badInputCallback)) {
                 CDUPerformancePage.ShowAPPRPage(mcdu);
-            } else {
-                scratchpadCallback(value);
             }
         };
 
@@ -732,11 +688,9 @@ class CDUPerformancePage {
         } else if (closeToDest) {
             tempCell = "{amber}___°{end}";
         }
-        mcdu.onLeftInput[1] = (value, scratchpadCallback) => {
-            if (mcdu.setPerfApprTemp(value)) {
+        mcdu.onLeftInput[1] = (value, badInputCallback) => {
+            if (mcdu.setPerfApprTemp(value, badInputCallback)) {
                 CDUPerformancePage.ShowAPPRPage(mcdu);
-            } else {
-                scratchpadCallback(value);
             }
         };
         let magWindHeadingCell = "[\xa0]";
@@ -747,13 +701,11 @@ class CDUPerformancePage {
         if (isFinite(mcdu.perfApprWindSpeed)) {
             magWindSpeedCell = mcdu.perfApprWindSpeed.toFixed(0).padStart(3, "0");
         }
-        mcdu.onLeftInput[2] = (value, scratchpadCallback) => {
-            if (mcdu.setPerfApprWind(value)) {
+        mcdu.onLeftInput[2] = (value, badInputCallback) => {
+            if (mcdu.setPerfApprWind(value, badInputCallback)) {
                 mcdu.updateTowerHeadwind();
                 mcdu.updatePerfSpeeds();
                 CDUPerformancePage.ShowAPPRPage(mcdu);
-            } else {
-                scratchpadCallback(value);
             }
         };
 
@@ -764,11 +716,9 @@ class CDUPerformancePage {
                 transAltCell = `{small}${transAltCell}{end}`;
             }
         }
-        mcdu.onLeftInput[3] = (value, scratchpadCallback) => {
-            if (mcdu.setPerfApprTransAlt(value)) {
+        mcdu.onLeftInput[3] = (value, badInputCallback) => {
+            if (mcdu.setPerfApprTransAlt(value, badInputCallback)) {
                 CDUPerformancePage.ShowAPPRPage(mcdu);
-            } else {
-                scratchpadCallback(value);
             }
         };
 
@@ -787,11 +737,9 @@ class CDUPerformancePage {
         if (isFinite(mcdu.vApp)) { // pilot override
             vappCell = `{cyan}${mcdu.vApp.toFixed(0).padStart(3, "\xa0")}{end}`;
         }
-        mcdu.onLeftInput[4] = (value, scratchpadCallback) => {
-            if (mcdu.setPerfApprVApp(value)) {
+        mcdu.onLeftInput[4] = (value, badInputCallback) => {
+            if (mcdu.setPerfApprVApp(value, badInputCallback)) {
                 CDUPerformancePage.ShowAPPRPage(mcdu);
-            } else {
-                scratchpadCallback(value);
             }
         };
         mcdu.onRightInput[4] = () => {
@@ -804,11 +752,9 @@ class CDUPerformancePage {
         if (isFinite(mcdu.perfApprMDA)) {
             baroCell = mcdu.perfApprMDA.toFixed(0);
         }
-        mcdu.onRightInput[1] = (value, scratchpadCallback) => {
-            if (mcdu.setPerfApprMDA(value) && mcdu.setPerfApprDH(FMCMainDisplay.clrValue)) {
+        mcdu.onRightInput[1] = (value, badInputCallback) => {
+            if (mcdu.setPerfApprMDA(value, badInputCallback) && mcdu.setPerfApprDH(FMCMainDisplay.clrValue, badInputCallback)) {
                 CDUPerformancePage.ShowAPPRPage(mcdu);
-            } else {
-                scratchpadCallback(value);
             }
         };
 
@@ -825,11 +771,9 @@ class CDUPerformancePage {
             } else {
                 radioCell = "[\xa0]";
             }
-            mcdu.onRightInput[2] = (value, scratchpadCallback) => {
-                if (mcdu.setPerfApprDH(value) && mcdu.setPerfApprMDA(FMCMainDisplay.clrValue)) {
+            mcdu.onRightInput[2] = (value, badInputCallback) => {
+                if (mcdu.setPerfApprDH(value, badInputCallback) && mcdu.setPerfApprMDA(FMCMainDisplay.clrValue, badInputCallback)) {
                     CDUPerformancePage.ShowAPPRPage(mcdu);
-                } else {
-                    scratchpadCallback(value);
                 }
             };
         }
@@ -929,11 +873,9 @@ class CDUPerformancePage {
         }
         thrRedAcc += "[color]cyan";
 
-        mcdu.onLeftInput[4] = (value, scratchpadCallback) => {
-            if (mcdu.trySetThrustReductionAccelerationAltitudeGoaround(value)) {
+        mcdu.onLeftInput[4] = (value, badInputCallback) => {
+            if (mcdu.trySetThrustReductionAccelerationAltitudeGoaround(value, badInputCallback)) {
                 CDUPerformancePage.ShowGOAROUNDPage(mcdu);
-            } else {
-                scratchpadCallback(value);
             }
         };
 
@@ -945,11 +887,9 @@ class CDUPerformancePage {
         }
         engOut += "[color]cyan";
 
-        mcdu.onRightInput[4] = (value, scratchpadCallback) => {
-            if (mcdu.trySetengineOutAccelerationAltitudeGoaround(value)) {
+        mcdu.onRightInput[4] = (value, badInputCallback) => {
+            if (mcdu.trySetengineOutAccelerationAltitudeGoaround(value, badInputCallback)) {
                 CDUPerformancePage.ShowGOAROUNDPage(mcdu);
-            } else {
-                scratchpadCallback(value);
             }
         };
         let flpRetrCell = "---";

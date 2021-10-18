@@ -207,30 +207,31 @@ const insertUplink = (mcdu) => {
     /**
      * AOC ACT F-PLN UPLINK
      */
-    mcdu.tryUpdateFromTo(fromTo, async (result) => {
-        if (result) {
-            CDUPerformancePage.UpdateThrRedAccFromOrigin(mcdu);
-            CDUPerformancePage.UpdateEngOutAccFromOrigin(mcdu);
+    mcdu.tryUpdateFromTo(fromTo, () => {}, async () => {
+        CDUPerformancePage.UpdateThrRedAccFromOrigin(mcdu);
+        CDUPerformancePage.UpdateEngOutAccFromOrigin(mcdu);
 
-            await mcdu.tryUpdateAltDestination(alternateIcao);
+        await mcdu.tryUpdateAltDestination(alternateIcao);
 
-            setTimeout(async () => {
-                await uplinkRoute(mcdu);
-                mcdu.addNewMessage(NXSystemMessages.aocActFplnUplink);
-            }, mcdu.getDelayRouteChange());
+        setTimeout(async () => {
+            await uplinkRoute(mcdu);
+            mcdu.removeMessage(NXSystemMessages.uplinkInsertInProg.text);
+            mcdu.addNewMessage(NXSystemMessages.aocActFplnUplink);
+        }, mcdu.getDelayRouteChange());
 
+        if (mcdu.page.Current === mcdu.page.InitPageA) {
+            CDUInitPage.ShowPage1(mcdu);
+        }
+    });
+    mcdu.updateFlightNo(
+        fltNbr,
+        () => {},
+        () => {
             if (mcdu.page.Current === mcdu.page.InitPageA) {
                 CDUInitPage.ShowPage1(mcdu);
             }
         }
-    });
-    mcdu.updateFlightNo(fltNbr, (result) => {
-        if (result) {
-            if (mcdu.page.Current === mcdu.page.InitPageA) {
-                CDUInitPage.ShowPage1(mcdu);
-            }
-        }
-    });
+    );
 
     /**
      * INIT PAGE DATA UPLINK
@@ -255,7 +256,7 @@ const addWaypointAsync = (fix, mcdu, routeIdent, via) => {
                     res(true);
                 } else {
                     console.log('AWY/WPT MISMATCH ' + routeIdent + " via " + via);
-                    mcdu.addNewMessage(NXSystemMessages.awyWptMismatch);
+                    mcdu.scratchpad.setMessage(NXSystemMessages.awyWptMismatch);
                     res(false);
                 }
             });
@@ -274,7 +275,7 @@ const addWaypointAsync = (fix, mcdu, routeIdent, via) => {
                     });
                 } else {
                     console.log('NOT IN DATABASE ' + routeIdent);
-                    mcdu.addNewMessage(NXSystemMessages.notInDatabase);
+                    mcdu.scratchpad.setMessage(NXSystemMessages.notInDatabase);
                     res(false);
                 }
             });
