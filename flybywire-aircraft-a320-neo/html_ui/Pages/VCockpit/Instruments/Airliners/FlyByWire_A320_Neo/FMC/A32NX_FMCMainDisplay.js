@@ -1811,7 +1811,7 @@ class FMCMainDisplay extends BaseAirliners {
         });
     }
 
-    async insertWaypointsAlongAirway(lastWaypointIdent, index, airwayName, callback = EmptyCallback.Boolean) {
+    async insertWaypointsAlongAirway(lastWaypointIdent, index, airwayName, badInputCallback, successCallback) {
         const referenceWaypoint = this.flightPlanManager.getWaypoint(index - 1);
         const lastWaypointIdentPadEnd = lastWaypointIdent.padEnd(5, " ");
         if (referenceWaypoint) {
@@ -1851,18 +1851,17 @@ class FMCMainDisplay extends BaseAirliners {
 
                                 await syncInsertWaypointByIcao(airway.icaos[firstIndex + i * inc], index + i);
                             }
-                            callback(true);
-                            return;
+                            return successCallback();
                         }
-                        return callback(false);
+                        return badInputCallback();
                     }
-                    return callback(false);
+                    return badInputCallback();
                 }
-                return callback(false);
+                return badInputCallback();
             }
-            return callback(false);
+            return badInputCallback();
         }
-        return callback(false);
+        return badInputCallback();
     }
 
     // Copy airway selections from temporary to active flightplan

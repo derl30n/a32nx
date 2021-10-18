@@ -250,16 +250,20 @@ const addWaypointAsync = (fix, mcdu, routeIdent, via) => {
     const wpIndex = mcdu.flightPlanManager.getWaypointsCount() - 1;
     if (via) {
         return new Promise((res, rej) => {
-            mcdu.insertWaypointsAlongAirway(routeIdent, wpIndex, via, (result) => {
-                if (result) {
+            mcdu.insertWaypointsAlongAirway(
+                routeIdent,
+                wpIndex,
+                via,
+                () => {
                     console.log("Inserted waypoint: " + routeIdent + " via " + via);
                     res(true);
-                } else {
+                },
+                () => {
                     console.log('AWY/WPT MISMATCH ' + routeIdent + " via " + via);
                     mcdu.setScratchpadMessage(NXSystemMessages.awyWptMismatch);
                     res(false);
                 }
-            });
+            );
         });
     } else {
         return new Promise((res, rej) => {
