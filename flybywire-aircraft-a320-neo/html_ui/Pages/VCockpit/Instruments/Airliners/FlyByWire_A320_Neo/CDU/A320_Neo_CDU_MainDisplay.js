@@ -15,13 +15,11 @@ class A320_Neo_CDU_MainDisplay extends FMCMainDisplay {
         this.messages = [];
         this.sentMessages = [];
         this.activeSystem = 'FMGC';
-        this.messageQueue = [];
         this.inFocus = false;
         this.lastInput = 0;
         this.clrStop = false;
         this.allSelected = false;
         this.updateRequest = false;
-        this.aocAirportList = new CDUAocAirportList;
         this.initB = false;
         this.PageTimeout = {
             Prog: 2000,
@@ -101,9 +99,6 @@ class A320_Neo_CDU_MainDisplay extends FMCMainDisplay {
 
     initMcduVariables() {
         this.setScratchpadText("");
-        // TODO: remove message queue => now fmgc system
-        this.messageQueue = [];
-        this.aocAirportList.init();
     }
 
     Init() {

@@ -8,6 +8,7 @@ class FMCMainDisplay extends BaseAirliners {
         this.currentFlightPhase = SimVar.GetSimVarValue("L:A32NX_INITIAL_FLIGHT_PHASE", "number") || FmgcFlightPhases.PREFLIGHT;
         this.flightPhaseManager = new A32NX_FlightPhaseManager(this);
         this._messageQueue = new A32NX_MessageQueue(this);
+        this.aocAirportList = new CDUAocAirportList;
         this._apCooldown = 500;
         this._radioNavOn = false;
         this._vhf1Frequency = 0;
@@ -468,6 +469,9 @@ class FMCMainDisplay extends BaseAirliners {
         this.zeroFuelWeightMassCenter = undefined;
         this.previousAdirsStatus = undefined;
 
+        this._messageQueue.resetQueue();
+        this.aocAirportList.init();
+
         // Reset SimVars
         SimVar.SetSimVarValue("L:AIRLINER_V1_SPEED", "Knots", NaN);
         SimVar.SetSimVarValue("L:AIRLINER_V2_SPEED", "Knots", NaN);
@@ -495,8 +499,6 @@ class FMCMainDisplay extends BaseAirliners {
         if (SimVar.GetSimVarValue("L:A32NX_AUTOTHRUST_DISABLED", "number") === 1) {
             SimVar.SetSimVarValue("K:A32NX.ATHR_RESET_DISABLE", "number", 1);
         }
-
-        this._messageQueue.resetQueue();
     }
 
     onUpdate(_deltaTime) {
