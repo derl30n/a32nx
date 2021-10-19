@@ -902,6 +902,27 @@ class A320_Neo_CDU_MainDisplay extends FMCMainDisplay {
         });
     }
 
+    scratchpadCallback(value, message) {
+        this.setScratchpadMessage(message);
+        this._setScratchpadUserData(value);
+    }
+
+    setScratchpadMessage(message) {
+        this._scratchpad.setMessage(message);
+    }
+
+    removeScratchpadMessage(value) {
+        this._scratchpad.removeMessage(value);
+    }
+
+    setScratchpadText(value) {
+        this._scratchpad.setText(value);
+    }
+
+    _setScratchpadUserData(value) {
+        this._scratchpad.setUserData(value);
+    }
+
     /* END OF MCDU SCRATCHPAD */
     /* MCDU EVENTS */
 
@@ -1120,27 +1141,6 @@ class A320_Neo_CDU_MainDisplay extends FMCMainDisplay {
             value,
             (message) => this.scratchpadCallback(value, message)
         );
-    }
-
-    scratchpadCallback(value, message) {
-        this.setScratchpadMessage(message);
-        this._setScratchpadUserData(value);
-    }
-
-    setScratchpadMessage(message) {
-        this._scratchpad.setMessage(message);
-    }
-
-    removeScratchpadMessage(value) {
-        this._scratchpad.removeMessage(value);
-    }
-
-    setScratchpadText(value) {
-        this._scratchpad.setText(value);
-    }
-
-    _setScratchpadUserData(value) {
-        this._scratchpad.setUserData(value);
     }
 
     /* END OF MCDU EVENTS */
