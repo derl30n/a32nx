@@ -68,13 +68,13 @@ class CDUPerformancePage {
                     if (mcdu._v1Checked) {
                         // not real: v-speed helper
                         if (mcdu.flaps) {
-                            mcdu.scratchpad.setText(mcdu._getV1Speed().toString());
+                            mcdu.setScratchpadText(mcdu._getV1Speed().toString());
                         } else {
                             badInputCallback(NXSystemMessages.formatError);
                         }
                     } else {
                         mcdu._v1Checked = true;
-                        mcdu.tryRemoveMessage(NXSystemMessages.checkToData.text);
+                        mcdu.removeMessageFromQueue(NXSystemMessages.checkToData.text);
                         mcdu.vSpeedDisagreeCheck();
                     }
                     CDUPerformancePage.ShowTAKEOFFPage(mcdu);
@@ -94,13 +94,13 @@ class CDUPerformancePage {
                 if (value === "") {
                     if (mcdu._vRChecked) {
                         if (mcdu.flaps) {
-                            mcdu.scratchpad.setText(mcdu._getVRSpeed().toString());
+                            mcdu.setScratchpadText(mcdu._getVRSpeed().toString());
                         } else {
                             badInputCallback(NXSystemMessages.formatError);
                         }
                     } else {
                         mcdu._vRChecked = true;
-                        mcdu.tryRemoveMessage(NXSystemMessages.checkToData.text);
+                        mcdu.removeMessageFromQueue(NXSystemMessages.checkToData.text);
                         mcdu.vSpeedDisagreeCheck();
                     }
                     CDUPerformancePage.ShowTAKEOFFPage(mcdu);
@@ -120,13 +120,13 @@ class CDUPerformancePage {
                 if (value === "") {
                     if (mcdu._v2Checked) {
                         if (mcdu.flaps) {
-                            mcdu.scratchpad.setText(mcdu._getV2Speed().toString());
+                            mcdu.setScratchpadText(mcdu._getV2Speed().toString());
                         } else {
                             badInputCallback(NXSystemMessages.formatError);
                         }
                     } else {
                         mcdu._v2Checked = true;
-                        mcdu.tryRemoveMessage(NXSystemMessages.checkToData.text);
+                        mcdu.removeMessageFromQueue(NXSystemMessages.checkToData.text);
                         mcdu.vSpeedDisagreeCheck();
                     }
                     CDUPerformancePage.ShowTAKEOFFPage(mcdu);

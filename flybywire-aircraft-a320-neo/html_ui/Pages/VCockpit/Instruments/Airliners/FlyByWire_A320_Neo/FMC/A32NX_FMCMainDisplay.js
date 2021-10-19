@@ -1002,13 +1002,13 @@ class FMCMainDisplay extends BaseAirliners {
             this.previousAdirsStatus = currentAdirsStatus;
             SimVar.SetSimVarValue("L:GPSPrimaryAcknowledged", "Bool", 0);
 
-            this.addNewMessage(
+            this.addMessageToQueue(
                 NXSystemMessages.gpsPrimary,
                 () => !SimVar.GetSimVarValue("L:A32NX_ADIRS_USES_GPS_AS_PRIMARY", "Bool"),
                 () => SimVar.SetSimVarValue("L:GPSPrimaryAcknowledged", "Bool", 1)
             );
 
-            this.addNewMessage(
+            this.addMessageToQueue(
                 NXSystemMessages.gpsPrimaryLost,
                 () => SimVar.GetSimVarValue("L:A32NX_ADIRS_USES_GPS_AS_PRIMARY", "Bool")
             );
@@ -1123,7 +1123,7 @@ class FMCMainDisplay extends BaseAirliners {
             (this.currentFlightPhase === FmgcFlightPhases.CLIMB && _targetFl > this.cruiseFlightLevel) ||
             (this.currentFlightPhase === FmgcFlightPhases.CRUISE && _targetFl !== this.cruiseFlightLevel)
         ) {
-            this.addNewMessage(NXSystemMessages.newCrzAlt.getSetMessage(_targetFl * 100));
+            this.addMessageToQueue(NXSystemMessages.newCrzAlt.modifyMessage(_targetFl * 100));
             this.cruiseFlightLevel = _targetFl;
             this._cruiseFlightLevel = _targetFl;
         }
@@ -1159,7 +1159,7 @@ class FMCMainDisplay extends BaseAirliners {
                             this.currentFlightPhase === FmgcFlightPhases.CRUISE && fcuFl !== this.cruiseFlightLevel
                         )
                     ) {
-                        this.addNewMessage(NXSystemMessages.newCrzAlt.getSetMessage(fcuFl * 100));
+                        this.addMessageToQueue(NXSystemMessages.newCrzAlt.modifyMessage(fcuFl * 100));
                         this.cruiseFlightLevel = fcuFl;
                         this._cruiseFlightLevel = fcuFl;
                         if (this.page.Current === this.page.ProgressPage) {
@@ -1175,7 +1175,7 @@ class FMCMainDisplay extends BaseAirliners {
     /* FMS CHECK ROUTINE */
 
     checkDestData() {
-        this.addNewMessage(NXSystemMessages.enterDestData, () => {
+        this.addMessageToQueue(NXSystemMessages.enterDestData, () => {
             return isFinite(this.perfApprQNH) && isFinite(this.perfApprTemp) && isFinite(this.perfApprWindHeading) && isFinite(this.perfApprWindSpeed);
         });
     }
@@ -1375,7 +1375,7 @@ class FMCMainDisplay extends BaseAirliners {
             if (this.isMinDestFobInRange(value)) {
                 this._minDestFobEntered = true;
                 if (value < this._minDestFob) {
-                    this.addNewMessage(NXSystemMessages.checkMinDestFob);
+                    this.addMessageToQueue(NXSystemMessages.checkMinDestFob);
                 }
                 this._minDestFob = value;
                 return successCallback();
@@ -1902,16 +1902,8 @@ class FMCMainDisplay extends BaseAirliners {
         }
     }
 
-    vSpeedsValid() {
-        return this._v1Checked && this._vRChecked && this._v2Checked ? (
-            (!!this.v1Speed && !!this.vRSpeed ? this.v1Speed <= this.vRSpeed : true)
-            && (!!this.vRSpeed && !!this.v2Speed ? this.vRSpeed <= this.v2Speed : true)
-            && (!!this.v1Speed && !!this.v2Speed ? this.v1Speed <= this.v2Speed : true)
-        ) : true;
-    }
-
     vSpeedDisagreeCheck() {
-        this.addNewMessage(NXSystemMessages.vToDisagree, this.vSpeedsValid.bind(this));
+        this.addMessageToQueue(NXSystemMessages.vToDisagree);
     }
 
     //Needs PR Merge #3082
@@ -1926,7 +1918,7 @@ class FMCMainDisplay extends BaseAirliners {
         if (v < 90 || v > 350) {
             return badInputCallback(NXSystemMessages.entryOutOfRange);
         }
-        this.tryRemoveMessage(NXSystemMessages.checkToData.text);
+        this.removeMessageFromQueue(NXSystemMessages.checkToData.text);
         this._v1Checked = true;
         this.v1Speed = v;
         SimVar.SetSimVarValue("L:AIRLINER_V1_SPEED", "Knots", this.v1Speed).then(() => {
@@ -1947,7 +1939,7 @@ class FMCMainDisplay extends BaseAirliners {
         if (v < 90 || v > 350) {
             return badInputCallback(NXSystemMessages.entryOutOfRange);
         }
-        this.tryRemoveMessage(NXSystemMessages.checkToData.text);
+        this.removeMessageFromQueue(NXSystemMessages.checkToData.text);
         this._vRChecked = true;
         this.vRSpeed = v;
         SimVar.SetSimVarValue("L:AIRLINER_VR_SPEED", "Knots", this.vRSpeed).then(() => {
@@ -1968,7 +1960,7 @@ class FMCMainDisplay extends BaseAirliners {
         if (v < 90 || v > 350) {
             return badInputCallback(NXSystemMessages.entryOutOfRange);
         }
-        this.tryRemoveMessage(NXSystemMessages.checkToData.text);
+        this.removeMessageFromQueue(NXSystemMessages.checkToData.text);
         this._v2Checked = true;
         this.v2Speed = v;
         SimVar.SetSimVarValue("L:AIRLINER_V2_SPEED", "Knots", this.v2Speed).then(() => {
@@ -3218,19 +3210,9 @@ class FMCMainDisplay extends BaseAirliners {
 
         if (EFOBBelMin < this._minDestFob) {
             if (this.isAnEngineOn()) {
-                setTimeout(() => {
-                    this.addNewMessage(NXSystemMessages.destEfobBelowMin, () => {
-                        return this._EfobBelowMinClr === true;
-                    }, () => {
-                        this._EfobBelowMinClr = true;
-                    });
-                }, 180000);
+                setTimeout(() => this.addMessageToQueue(NXSystemMessages.destEfobBelowMin), 180000);
             } else {
-                this.addNewMessage(NXSystemMessages.destEfobBelowMin, () => {
-                    return this._EfobBelowMinClr === true;
-                }, () => {
-                    this._EfobBelowMinClr = true;
-                });
+                this.addMessageToQueue(NXSystemMessages.destEfobBelowMin);
             }
         }
     }
@@ -3261,7 +3243,7 @@ class FMCMainDisplay extends BaseAirliners {
      */
     tryCheckToData() {
         if (isFinite(this.v1Speed) || isFinite(this.vRSpeed) || isFinite(this.v2Speed)) {
-            this.addNewMessage(NXSystemMessages.checkToData);
+            this.addMessageToQueue(NXSystemMessages.checkToData);
         }
     }
 
@@ -3289,9 +3271,7 @@ class FMCMainDisplay extends BaseAirliners {
                 if (this._v1Checked && this._vRChecked && this._v2Checked && this._toFlexChecked) {
                     return;
                 }
-                this.addNewMessage(NXSystemMessages.checkToData, (mcdu) => {
-                    return mcdu._v1Checked && mcdu._vRChecked && mcdu._v2Checked && mcdu._toFlexChecked;
-                });
+                this.addMessageToQueue(NXSystemMessages.checkToData, (mcdu) => mcdu._v1Checked && mcdu._vRChecked && mcdu._v2Checked && mcdu._toFlexChecked);
             }
             this.toRunway = toRunway;
         }
@@ -3624,6 +3604,32 @@ class FMCMainDisplay extends BaseAirliners {
 
     get progWaypointIdent() {
         return this._progBrgDist ? this._progBrgDist.ident : undefined;
+    }
+
+    /**
+     * Add type 2 message to fmgc message queue
+     * @param _message {McduMessage} MessageObject
+     * @param _isResolvedOverride {function(*)} Function that determines if the error is resolved at this moment (type II only).
+     * @param _onClearOverride {function(*)} Function that executes when the error is actively cleared by the pilot (type II only).
+     */
+    addMessageToQueue(_message, _isResolvedOverride = undefined, _onClearOverride = undefined) {
+        if (!_message.isTypeTwo) {
+            return;
+        }
+        const message = _isResolvedOverride === undefined && _onClearOverride === undefined ? _message : _message.modifyMessage("", _isResolvedOverride, _onClearOverride);
+        this._messageQueue.addMessage(message);
+    }
+
+    /**
+     * Removes a message from the queue
+     * @param value {String|Integer}
+     */
+    removeMessageFromQueue(value) {
+        this._messageQueue.removeMessage(value);
+    }
+
+    updateMessageQueue() {
+        this._messageQueue.updateDisplayedMessage();
     }
 
     /* END OF MCDU GET/SET METHODS */

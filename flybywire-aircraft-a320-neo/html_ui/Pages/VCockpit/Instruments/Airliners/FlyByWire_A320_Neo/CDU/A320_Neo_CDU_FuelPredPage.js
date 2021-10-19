@@ -28,7 +28,7 @@ class CDUFuelPredPage {
         mcdu.onRightInput[2] = async (value, badInputCallback) => {
             if (value === "") {
                 mcdu.updateZfwVars();
-                mcdu.scratchpad.setText(
+                mcdu.setScratchpadText(
                     (isFinite(mcdu.zeroFuelWeight) ? (NXUnits.kgToUser(mcdu.zeroFuelWeight)).toFixed(1) : "") +
                     "/" +
                     (isFinite(mcdu.zeroFuelWeightMassCenter) ? mcdu.zeroFuelWeightMassCenter.toFixed(1) : ""));

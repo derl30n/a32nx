@@ -135,7 +135,7 @@ const getSimBriefOfp = (mcdu, updateView, callback) => {
     const simBriefUserId = NXDataStore.get("CONFIG_SIMBRIEF_USERID", "");
 
     if (!simBriefUserId) {
-        mcdu.addNewMessage(NXFictionalMessages.noSimBriefUser);
+        mcdu.setScratchpadMessage(NXFictionalMessages.noSimBriefUser);
         throw new Error("No SimBrief pilot ID provided");
     }
 
@@ -202,7 +202,7 @@ const insertUplink = (mcdu) => {
     const fromTo = `${originIcao}/${destinationIcao}`;
     const fltNbr = `${icao_airline}${flight_number}`;
 
-    mcdu.addNewMessage(NXSystemMessages.uplinkInsertInProg);
+    mcdu.addMessageToQueue(NXSystemMessages.uplinkInsertInProg);
 
     /**
      * AOC ACT F-PLN UPLINK
@@ -216,7 +216,7 @@ const insertUplink = (mcdu) => {
         setTimeout(async () => {
             await uplinkRoute(mcdu);
             mcdu.removeMessage(NXSystemMessages.uplinkInsertInProg.text);
-            mcdu.addNewMessage(NXSystemMessages.aocActFplnUplink);
+            mcdu.addMessageToQueue(NXSystemMessages.aocActFplnUplink);
         }, mcdu.getDelayRouteChange());
 
         if (mcdu.page.Current === mcdu.page.InitPageA) {

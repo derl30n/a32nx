@@ -4,34 +4,28 @@ class A32NX_MessageQueue {
         this._queue = [];
     }
 
-    resetQueue() {
-        this._queue = [];
-    }
-
+    /**
+     * Fmgc messages enter the queue via this void
+     * @param message {McduMessage}
+     */
     addMessage(message) {
-        if (message.isTypeTwo && this._tryAddToQueueOrUpdateQueuePosition(message.text)) {
-            // Before adding message to queue, check other messages in queue for validity
-            for (let i = 0; i < this._queue.length; i++) {
-                if (this._queue[i].isResolved(this)) {
-                    this._queue.splice(i, 1);
-                }
-            }
-            this._queue.unshift(message);
-            if (this._queue.length > 5) {
-                this._queue.splice(5, 1);
-            }
+        if (message.isResolved(this._fmgc)) {
             this.updateDisplayedMessage();
+            return;
         }
+
+        this._addToQueueOrUpdateQueuePosition(message);
+        this.updateDisplayedMessage();
     }
 
     removeMessage(value) {
         for (let i = 0; i < this._queue.length; i++) {
-            if (this._queue[i].text === value) {
-                this._queue[i].onClear(this);
+            const message = this._queue[i];
+            if (typeof value === "number" ? message.id === value : message.text === value) {
+                message.onClear(this._fmgc);
                 this._queue.splice(i, 1);
                 if (i === 0) {
-                    // this._fmgc.mcdu.scratchpad.removeMessage(value);
-                    this._fmgc.scratchpad.removeMessage(value);
+                    this._fmgc.removeScratchpadMessage(value);
                     this.updateDisplayedMessage();
                 }
                 break;
@@ -39,10 +33,14 @@ class A32NX_MessageQueue {
         }
     }
 
+    resetQueue() {
+        this._queue = [];
+    }
+
     updateDisplayedMessage() {
         if (this._queue.length > 0) {
             const message = this._queue[0];
-            if (message.isResolved(this)) {
+            if (message.isResolved(this._fmgc)) {
                 this._queue.splice(0, 1);
                 return this.updateDisplayedMessage();
             }
@@ -51,20 +49,27 @@ class A32NX_MessageQueue {
         }
     }
 
-    _tryAddToQueueOrUpdateQueuePosition(value) {
-        if (!value) {
-            return false;
-        }
+    _addToQueueOrUpdateQueuePosition(message) {
         for (let i = 0; i < this._queue.length; i++) {
-            if (this._queue[i].text === value) {
+            if (this._queue[i].text === message.text) {
                 if (i !== 0) {
-                    this._queue.unshift(this.messageQueue[i]);
+                    this._queue.unshift(this._queue[i]);
                     this._queue.splice(i + 1, 1);
-                    this.updateDisplayedMessage();
                 }
-                return false;
+                return;
             }
         }
-        return true;
+
+        for (let i = 0; i < this._queue.length; i++) {
+            if (this._queue[i].isResolved(this._fmgc)) {
+                this._queue.splice(i, 1);
+            }
+        }
+
+        this._queue.unshift(message);
+
+        if (this._queue.length > 5) {
+            this._queue.splice(5, 1);
+        }
     }
 }
