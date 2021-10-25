@@ -1205,7 +1205,7 @@ class FMCMainDisplay extends BaseAirliners {
         const tempString = input.split("/")[1];
         const onlyTemp = flString.length === 0;
 
-        if (!!flString && !onlyTemp && this.trySetCruiseFl(parseFloat(flString), badInputCallback, successCallback)) {
+        if (!!flString && !onlyTemp && this.trySetCruiseFl(parseFloat(flString), badInputCallback, () => true)) {
             if (SimVar.GetSimVarValue("L:A32NX_CRZ_ALT_SET_INITIAL", "bool") === 1 && SimVar.GetSimVarValue("L:A32NX_GOAROUND_PASSED", "bool") === 1) {
                 SimVar.SetSimVarValue("L:A32NX_NEW_CRZ_ALT", "number", this.cruiseFlightLevel);
             } else {
@@ -2359,7 +2359,7 @@ class FMCMainDisplay extends BaseAirliners {
         if (!flString) {
             return badInputCallback(NXSystemMessages.notAllowed);
         }
-        return this.trySetCruiseFl(parseFloat(flString), badInputCallback, successCallback);
+        this.trySetCruiseFl(parseFloat(flString), badInputCallback, successCallback);
     }
 
     /**
@@ -2371,26 +2371,22 @@ class FMCMainDisplay extends BaseAirliners {
      */
     trySetCruiseFl(fl, badInputCallback, successCallback) {
         if (!isFinite(fl)) {
-            badInputCallback(NXSystemMessages.notAllowed);
-            return false;
+            return badInputCallback(NXSystemMessages.notAllowed);
         }
         if (fl >= 1000) {
             fl = Math.floor(fl / 100);
         }
         if (fl > this.maxCruiseFL) {
-            badInputCallback(NXSystemMessages.entryOutOfRange);
-            return false;
+            return badInputCallback(NXSystemMessages.entryOutOfRange);
         }
         const phase = this.currentFlightPhase;
         const selFl = Math.floor(Math.max(0, Simplane.getAutoPilotDisplayedAltitudeLockValue("feet")) / 100);
         if (fl < selFl && (phase === FmgcFlightPhases.CLIMB || phase === FmgcFlightPhases.APPROACH || phase === FmgcFlightPhases.GOAROUND)) {
-            badInputCallback(NXSystemMessages.entryOutOfRange);
-            return false;
+            return badInputCallback(NXSystemMessages.entryOutOfRange);
         }
 
         if (fl <= 0 || fl > this.maxCruiseFL) {
-            badInputCallback(NXSystemMessages.entryOutOfRange);
-            return false;
+            return badInputCallback(NXSystemMessages.entryOutOfRange);
         }
 
         this.cruiseFlightLevel = fl;
@@ -2408,7 +2404,7 @@ class FMCMainDisplay extends BaseAirliners {
             this.flightPhaseManager.changeFlightPhase(FmgcFlightPhases.CLIMB);
         }
 
-        return true;
+        return successCallback();
     }
 
     trySetRouteReservedFuel(s, badInputCallback, successCallback) {
