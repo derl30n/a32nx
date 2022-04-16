@@ -1,7 +1,6 @@
 class CDUCfdsTestInfo {
     // not used atm
     static ShowPage(mcdu) {
-        mcdu.clearDisplay();
         mcdu.setTemplate([
             ["SYSTEM REPORT / TEST"],
             ["", "", "INFO"],
@@ -18,54 +17,22 @@ class CDUCfdsTestInfo {
             ["<RETURN[color]cyan"]
         ]);
 
-        mcdu.leftInputDelay[0] = () => {
-            return mcdu.getDelaySwitchPage();
-        };
-        mcdu.onLeftInput[0] = () => {
-            CDU_CFDS_Test_Inst_ECAM1_Menu.ShowPage(mcdu);
-        };
-        mcdu.leftInputDelay[1] = () => {
-            return mcdu.getDelaySwitchPage();
-        };
-        mcdu.onLeftInput[1] = () => {
-            CDU_CFDS_Test_Inst_ECAM2_Menu.ShowPage(mcdu);
-        };
-        mcdu.leftInputDelay[2] = () => {
-            return mcdu.getDelaySwitchPage();
-        };
-        mcdu.onLeftInput[2] = () => {
-            CDU_CFDS_Test_Inst_DFDRS_Menu.ShowPage(mcdu);
-        };
-        mcdu.leftInputDelay[5] = () => {
-            return mcdu.getDelaySwitchPage();
-        };
-        mcdu.onLeftInput[5] = () => {
-            CDUCfdsTestMenu.ShowPage(mcdu);
-        };
-        mcdu.rightInputDelay[0] = () => {
-            return mcdu.getDelaySwitchPage();
-        };
-        mcdu.onRightInput[0] = () => {
-            CDU_CFDS_Test_Inst_CFDIU_Menu.ShowPage(mcdu);
-        };
-        mcdu.rightInputDelay[1] = () => {
-            return mcdu.getDelaySwitchPage();
-        };
-        mcdu.onRightInput[1] = () => {
-            CDU_CFDS_Test_Inst_EIS1_Menu.ShowPage(mcdu);
-        };
-        mcdu.rightInputDelay[2] = () => {
-            return mcdu.getDelaySwitchPage();
-        };
-        mcdu.onRightInput[2] = () => {
-            CDU_CFDS_Test_Inst_EIS2_Menu.ShowPage(mcdu);
-        };
-        mcdu.rightInputDelay[3] = () => {
-            return mcdu.getDelaySwitchPage();
-        };
-        mcdu.onRightInput[3] = () => {
-            CDU_CFDS_Test_Inst_EIS3_Menu.ShowPage(mcdu);
-        };
+        mcdu.leftInputDelay[0] = () => mcdu.getDelaySwitchPage();
+        mcdu.leftInputDelay[1] = () => mcdu.getDelaySwitchPage();
+        mcdu.leftInputDelay[2] = () => mcdu.getDelaySwitchPage();
+        mcdu.leftInputDelay[5] = () => mcdu.getDelaySwitchPage();
+        mcdu.rightInputDelay[0] = () => mcdu.getDelaySwitchPage();
+        mcdu.rightInputDelay[1] = () => mcdu.getDelaySwitchPage();
+        mcdu.rightInputDelay[2] = () => mcdu.getDelaySwitchPage();
+        mcdu.rightInputDelay[3] = () => mcdu.getDelaySwitchPage();
 
+        mcdu.onLeftInput[0] = () => mcduPages.CFDSTestInstECAMMenu.display(mcdu, 1);
+        mcdu.onLeftInput[1] = () => mcduPages.CFDSTestInstECAMMenu.display(mcdu, 2);
+        mcdu.onLeftInput[2] = () => mcduPages.CFDSTestInstDFDRSMenu.display(mcdu);
+        mcdu.onLeftInput[5] = () => mcduPages.CFDSTestMenuPage1.display(mcdu);
+        mcdu.onRightInput[0] = () => mcduPages.CFDSTestInstCFDIUMenu.display(mcdu);
+        mcdu.onRightInput[1] = () => mcduPages.CFDSTestInstEISMenu.display(mcdu, 1);
+        mcdu.onRightInput[2] = () => mcduPages.CFDSTestInstEISMenu.display(mcdu, 2);
+        mcdu.onRightInput[3] = () => mcduPages.CFDSTestInstEISMenu.display(mcdu, 3);
     }
 }

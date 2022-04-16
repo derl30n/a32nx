@@ -1,6 +1,5 @@
 class CDUCfdsMainMenu {
     static ShowPage(mcdu) {
-        mcdu.clearDisplay();
         mcdu.activeSystem = 'CFDS';
         mcdu.setTemplate([
             ["CFDS", "1", "2"],
@@ -18,32 +17,19 @@ class CDUCfdsMainMenu {
             ["*SEND[color]cyan", "PRINT*[color]inop", "FLT REP"]
         ]);
 
-        mcdu.leftInputDelay[3] = () => {
-            return mcdu.getDelaySwitchPage();
-        };
-        mcdu.onLeftInput[3] = () => {
-            CDUCfdsAvionicsMenu.ShowPage(mcdu);
-        };
+        mcdu.leftInputDelay[3] = () => mcdu.getDelaySwitchPage();
+        mcdu.onLeftInput[3] = () => mcduPages.CFDSAvionicsMenuPage1.display(mcdu);
 
-        mcdu.leftInputDelay[4] = () => {
-            return mcdu.getDelaySwitchPage();
-        };
-        mcdu.onLeftInput[4] = () => {
-            CDUCfdsTestMenu.ShowPage(mcdu);
-        };
+        mcdu.leftInputDelay[4] = () => mcdu.getDelaySwitchPage();
+        mcdu.onLeftInput[4] = () => mcduPages.CFDSTestMenuPage1.display(mcdu);
 
         // PAGE SWITCHING
-        mcdu.onPrevPage = () => {
-            CDUCfdsMainMenu.ShowPage2(mcdu);
-        };
-        mcdu.onNextPage = () => {
-            CDUCfdsMainMenu.ShowPage2(mcdu);
-        };
+        mcdu.onPrevPage = () => mcduPages.CFDSMainMenuPage2.display(mcdu);
+        mcdu.onNextPage = () => mcduPages.CFDSMainMenuPage2.display(mcdu);
+
     }
 
     static ShowPage2(mcdu) {
-        mcdu.clearDisplay();
-
         mcdu.setTemplate([
             ["CFDS", "2", "2"],
             [""],
@@ -61,11 +47,7 @@ class CDUCfdsMainMenu {
         ]);
 
         // PAGE SWITCHING
-        mcdu.onPrevPage = () => {
-            CDUCfdsMainMenu.ShowPage(mcdu);
-        };
-        mcdu.onNextPage = () => {
-            CDUCfdsMainMenu.ShowPage(mcdu);
-        };
+        mcdu.onPrevPage = () => mcduPages.CFDSMainMenuPage1.display(mcdu);
+        mcdu.onNextPage = () => mcduPages.CFDSMainMenuPage1.display(mcdu);
     }
 }

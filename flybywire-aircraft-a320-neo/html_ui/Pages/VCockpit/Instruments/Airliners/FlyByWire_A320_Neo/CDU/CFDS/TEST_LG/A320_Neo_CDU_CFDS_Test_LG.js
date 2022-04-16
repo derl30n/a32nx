@@ -1,6 +1,5 @@
 class CDUCfdsTestLG {
     static ShowPage(mcdu) {
-        mcdu.clearDisplay();
         mcdu.setTemplate([
             ["SYSTEM REPORT / TEST"],
             ["", "", "L/G"],
@@ -17,11 +16,7 @@ class CDUCfdsTestLG {
             ["<RETURN[color]cyan"]
         ]);
 
-        mcdu.leftInputDelay[5] = () => {
-            return mcdu.getDelaySwitchPage();
-        };
-        mcdu.onLeftInput[5] = () => {
-            CDUCfdsTestMenu.ShowPage(mcdu);
-        };
+        mcdu.leftInputDelay[5] = () => mcdu.getDelaySwitchPage();
+        mcdu.onLeftInput[5] = () => mcduPages.CFDSTestMenuPage1.display(mcdu);
     }
 }

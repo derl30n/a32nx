@@ -1,6 +1,5 @@
 class CDU_CFDS_Test_Common_PowerUp {
     static ShowPage(mcdu) {
-        mcdu.clearDisplay();
         mcdu.setTemplate([
             ["ECAM-1"],
             ["", "", "FWC1/2-SDAC1/2-ECP"],
@@ -18,12 +17,7 @@ class CDU_CFDS_Test_Common_PowerUp {
         ]);
 
         // IMPLEMENTED BUTTONS
-        mcdu.leftInputDelay[5] = () => {
-            return mcdu.getDelaySwitchPage();
-        };
-        mcdu.onLeftInput[5] = () => {
-            CDUCfdsTestInst.ShowPage(mcdu);
-        };
-
+        mcdu.leftInputDelay[5] = () => mcdu.getDelaySwitchPage();
+        mcdu.onLeftInput[5] = () => mcduPages.CFDSTestInst.display(mcdu);
     }
 }

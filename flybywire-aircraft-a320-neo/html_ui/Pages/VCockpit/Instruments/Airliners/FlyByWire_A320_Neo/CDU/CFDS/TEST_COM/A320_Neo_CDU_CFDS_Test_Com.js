@@ -1,6 +1,5 @@
 class CDUCfdsTestCom {
     static ShowPage(mcdu) {
-        mcdu.clearDisplay();
         mcdu.setTemplate([
             ["SYSTEM REPORT / TEST   }"],
             ["", "", "COM"],
@@ -17,24 +16,15 @@ class CDUCfdsTestCom {
             ["<RETURN[color]cyan", "VHF 3>[color]inop"]
         ]);
 
-        mcdu.leftInputDelay[5] = () => {
-            return mcdu.getDelaySwitchPage();
-        };
-        mcdu.onLeftInput[5] = () => {
-            CDUCfdsTestMenu.ShowPage(mcdu);
-        };
+        mcdu.leftInputDelay[5] = () => mcdu.getDelaySwitchPage();
+        mcdu.onLeftInput[5] = () => mcduPages.CFDSTestMenuPage1.display(mcdu);
 
         // PAGE SWITCHING
-        mcdu.onPrevPage = () => {
-            CDUCfdsTestCom.ShowPage2(mcdu);
-        };
-        mcdu.onNextPage = () => {
-            CDUCfdsTestCom.ShowPage2(mcdu);
-        };
+        mcdu.onPrevPage = () => mcduPages.CFDSTestComPage2.display(mcdu);
+        mcdu.onNextPage = () => mcduPages.CFDSTestComPage2.display(mcdu);
     }
 
     static ShowPage2(mcdu) {
-        mcdu.clearDisplay();
         mcdu.setTemplate([
             ["SYSTEM REPORT / TEST   }"],
             ["", "", "COM"],
@@ -51,19 +41,11 @@ class CDUCfdsTestCom {
             ["<RETURN[color]cyan"]
         ]);
 
-        mcdu.leftInputDelay[5] = () => {
-            return mcdu.getDelaySwitchPage();
-        };
-        mcdu.onLeftInput[5] = () => {
-            CDUCfdsTestMenu.ShowPage(mcdu);
-        };
+        mcdu.leftInputDelay[5] = () => mcdu.getDelaySwitchPage();
+        mcdu.onLeftInput[5] = () => mcduPages.CFDSTestMenuPage1.display(mcdu);
 
         // PAGE SWITCHING
-        mcdu.onPrevPage = () => {
-            CDUCfdsTestCom.ShowPage(mcdu);
-        };
-        mcdu.onNextPage = () => {
-            CDUCfdsTestCom.ShowPage(mcdu);
-        };
+        mcdu.onPrevPage = () => mcduPages.CFDSTestComPage1.display(mcdu);
+        mcdu.onNextPage = () => mcduPages.CFDSTestComPage1.display(mcdu);
     }
 }

@@ -1,6 +1,5 @@
 class CDUCfdsAvionicsMenu {
     static ShowPage(mcdu) {
-        mcdu.clearDisplay();
         mcdu.setTemplate([
             ["AVIONICS STATUS", "1", "2"],
             [""],
@@ -17,25 +16,15 @@ class CDUCfdsAvionicsMenu {
             ["<RETURN[color]cyan", "PRINT*[color]inop"]
         ]);
 
-        mcdu.leftInputDelay[5] = () => {
-            return mcdu.getDelaySwitchPage();
-        };
-
-        mcdu.onLeftInput[5] = () => {
-            CDUCfdsMainMenu.ShowPage(mcdu);
-        };
+        mcdu.leftInputDelay[5] = () => mcdu.getDelaySwitchPage();
+        mcdu.onLeftInput[5] = () => mcduPages.CFDSMainMenuPage1.display(mcdu);
 
         // PAGE SWITCHING
-        mcdu.onPrevPage = () => {
-            CDUCfdsAvionicsMenu.ShowPage2(mcdu);
-        };
-        mcdu.onNextPage = () => {
-            CDUCfdsAvionicsMenu.ShowPage2(mcdu);
-        };
+        mcdu.onPrevPage = () => mcduPages.CFDSAvionicsMenuPage2.display(mcdu);
+        mcdu.onNextPage = () => mcduPages.CFDSAvionicsMenuPage2.display(mcdu);
     }
 
     static ShowPage2(mcdu) {
-        mcdu.clearDisplay();
         mcdu.setTemplate([
             ["AVIONICS STATUS", "2", "2"],
             [""],
@@ -52,20 +41,11 @@ class CDUCfdsAvionicsMenu {
             ["<RETURN[color]cyan", "PRINT*[color]inop"]
         ]);
 
-        mcdu.leftInputDelay[5] = () => {
-            return mcdu.getDelaySwitchPage();
-        };
-
-        mcdu.onLeftInput[5] = () => {
-            CDUCfdsMainMenu.ShowPage(mcdu);
-        };
+        mcdu.leftInputDelay[5] = () => mcdu.getDelaySwitchPage();
+        mcdu.onLeftInput[5] = () => mcduPages.CFDSMainMenuPage1.display(mcdu);
 
         // PAGE SWITCHING
-        mcdu.onPrevPage = () => {
-            CDUCfdsAvionicsMenu.ShowPage(mcdu);
-        };
-        mcdu.onNextPage = () => {
-            CDUCfdsAvionicsMenu.ShowPage(mcdu);
-        };
+        mcdu.onPrevPage = () => mcduPages.CFDSAvionicsMenuPage1.display(mcdu);
+        mcdu.onNextPage = () => mcduPages.CFDSAvionicsMenuPage1.display(mcdu);
     }
 }
