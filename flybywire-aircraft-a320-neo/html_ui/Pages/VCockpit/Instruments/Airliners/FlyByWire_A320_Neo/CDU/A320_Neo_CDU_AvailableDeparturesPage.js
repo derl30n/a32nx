@@ -170,7 +170,12 @@ class CDUAvailableDeparturesPage {
             }
             mcdu.setArrows(up, down, true, true);
             mcdu.setTemplate([
-                ["DEPARTURES {small}FROM{end} {green}" + airport.ident + "{end}"],
+                // ["DEPARTURES {small}FROM{end} {green}" + airport.ident + "{end}"],
+                formatLine(
+                    new Column(0, "DEPARTURES"),
+                    new Column(11, "FROM", true, true),
+                    new Column(16, airport.ident, true, false, "green")
+                ),
                 ["{sp}RWY", "TRANS{sp}", "{sp}SID"],
                 [selectedRunwayCell + "[color]" + selectedRunwayCellColor, selectedTransCell + "[color]" + selectedTransCellColor, selectedSidCell + "[color]" + selectedSidCellColor],
                 sidSelection ? ["SIDS", "TRANS", "AVAILABLE"] : ["", "", "RUNWAYS AVAILABLE"],
