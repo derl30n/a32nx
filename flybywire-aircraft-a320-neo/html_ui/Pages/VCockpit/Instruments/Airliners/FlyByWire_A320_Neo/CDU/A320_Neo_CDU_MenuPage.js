@@ -11,7 +11,7 @@ class CDUMenuPage {
 
         const updateView = () => {
             const getText = (name, isSelected, extra = "", isLeft = true) => isSelected ? (isLeft ? name + " (SEL)" : "(SEL) " + name) : name + extra;
-            const getColor = (system, isSelected) => system === activeSystem ? "green" : isSelected ? "cyan" : "white";
+            const getColor = (system, isSelected) => isSelected ? "cyan" : system === activeSystem ? "green" : "white";
 
             mcdu.setTemplate(formatTemplate([
                 [new Column(7, "MCDU MENU")],

@@ -172,9 +172,9 @@ class CDUAvailableDeparturesPage {
             mcdu.setTemplate([
                 // ["DEPARTURES {small}FROM{end} {green}" + airport.ident + "{end}"],
                 formatLine(
-                    new Column(0, "DEPARTURES"),
-                    new Column(11, "FROM", true, true),
-                    new Column(16, airport.ident, true, false, "green")
+                    new Column(1, "DEPARTURES"),
+                    new Column(12, "FROM", false, true),
+                    new Column(17, airport.ident, false, false, "green")
                 ),
                 ["{sp}RWY", "TRANS{sp}", "{sp}SID"],
                 [selectedRunwayCell + "[color]" + selectedRunwayCellColor, selectedTransCell + "[color]" + selectedTransCellColor, selectedSidCell + "[color]" + selectedSidCellColor],
