@@ -2,14 +2,23 @@ class Column {
     constructor(index, text, isLeftAligned = true, isTextSmall = false, color = "white") {
         this.raw = text;
         this.color = color;
-        this.isTextSmall = isTextSmall;
         this.length = text.length;
         this.anchorPos = isLeftAligned ? index : index - this.length + 1;
+        this.size = isTextSmall ? ["{small}", "{end}"] : ["", ""];
     }
 
     get text() {
-        return `${this.isTextSmall ? "{small}" : ""}{${this.color}}${this.raw}{end}${this.isTextSmall ? "{end}" : ""}`;
+        return `${this.size[0]}{${this.color}}${this.raw}{end}${this.size[1]}`;
     }
+}
+
+/**
+ * Returns a formatted mcdu page template
+ * @param lines {array[Column[]]} mcdu lines
+ * @returns {string[]} mcdu template
+ */
+function formatTemplate(lines) {
+    return lines.map(line => formatLine(...line));
 }
 
 /**
@@ -39,10 +48,10 @@ function formatLine(...params) {
         }
 
         // removes text overlap
-        item.raw = item.raw.slice(Math.max(0, pos - newStart), Math.min(item.length, Math.max(1, 23 - newEnd)));
+        item.raw = item.raw.slice(Math.max(0, pos - newStart), Math.min(item.length, Math.max(1, item.length + 24 - newEnd)));
 
         const limMin = Math.max(0, newStart - pos);
-        const limMax = Math.min(23, newEnd - pos);
+        const limMax = Math.min(24, newEnd - pos);
 
         line = line.slice(0, index + limMin) + item.text + line.slice(index + limMax);
         index += limMin + item.text.length;
