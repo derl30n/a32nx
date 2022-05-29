@@ -1,9 +1,9 @@
 class Column {
-    constructor(index, text, isLeftAligned = true, isTextSmall = false, color = "white") {
+    constructor(index, text, isRightAligned = false, isTextSmall = false, color = "white") {
         this.raw = text;
         this.color = color;
         this.length = text.length;
-        this.anchorPos = isLeftAligned ? index : index - this.length + 1;
+        this.anchorPos = isRightAligned ? index - this.length + 1 : index;
         this.size = isTextSmall ? ["{small}", "{end}"] : ["", ""];
     }
 
