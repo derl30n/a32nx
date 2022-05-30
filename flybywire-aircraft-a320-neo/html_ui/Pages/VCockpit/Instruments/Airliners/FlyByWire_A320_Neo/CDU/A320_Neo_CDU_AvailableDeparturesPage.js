@@ -5,22 +5,22 @@ class CDUAvailableDeparturesPage {
             mcdu.clearDisplay();
             mcdu.page.Current = mcdu.page.AvailableDeparturesPage;
             let selectedRunwayCell = "---";
-            let selectedRunwayCellColor = "white";
+            let selectedRunwayCellColor = Column.white;
             /** @type {OneWayRunway} */
             const selectedRunway = mcdu.flightPlanManager.getOriginRunway();
             if (selectedRunway) {
                 selectedRunwayCell = Avionics.Utils.formatRunway(selectedRunway.designation);
-                selectedRunwayCellColor = mcdu.flightPlanManager.getCurrentFlightPlanIndex() === 1 ? "yellow" : "green";
+                selectedRunwayCellColor = mcdu.flightPlanManager.getCurrentFlightPlanIndex() === 1 ? Column.yellow : Column.green;
             }
             let selectedSidCell = "------";
-            let selectedSidCellColor = "white";
+            let selectedSidCellColor = Column.white;
             let selectedTransCell = "------";
-            let selectedTransCellColor = "white";
+            let selectedTransCellColor = Column.white;
             let departureEnRouteTransition;
             const selectedDeparture = airportInfo.departures[mcdu.flightPlanManager.getDepartureProcIndex()];
             if (selectedDeparture) {
                 selectedSidCell = selectedDeparture.name;
-                selectedSidCellColor = mcdu.flightPlanManager.getCurrentFlightPlanIndex() === 1 ? "yellow" : "green";
+                selectedSidCellColor = mcdu.flightPlanManager.getCurrentFlightPlanIndex() === 1 ? Column.yellow : Column.green;
                 const departureEnRouteTransitionIndex = mcdu.flightPlanManager.getDepartureEnRouteTransitionIndex();
                 if (departureEnRouteTransitionIndex > -1) {
                     departureEnRouteTransition = selectedDeparture.enRouteTransitions[departureEnRouteTransitionIndex];
@@ -29,11 +29,11 @@ class CDUAvailableDeparturesPage {
                     } else {
                         selectedTransCell = "NONE";
                     }
-                    selectedTransCellColor = mcdu.flightPlanManager.getCurrentFlightPlanIndex() === 1 ? "yellow" : "green";
+                    selectedTransCellColor = mcdu.flightPlanManager.getCurrentFlightPlanIndex() === 1 ? Column.yellow : Column.green;
                 }
             }
             let doInsertRunwayOnly = false;
-            let insertRow = ["<RETURN"];
+            let insertRow = [new Column(0, "<RETURN")];
             mcdu.onLeftInput[5] = () => {
                 CDUFlightPlanPage.ShowPage(mcdu);
             };
@@ -45,11 +45,11 @@ class CDUAvailableDeparturesPage {
                     const runway = runways[index];
                     if (runway) {
                         rows[2 * i] = [
-                            "{" + Avionics.Utils.formatRunway(runway.designation) + "[color]cyan",
-                            "",
-                            runway.length.toFixed(0) + "{small}M{end}[color]cyan"
+                            new Column(0, "{" + runway.designation, Column.cyan),
+                            new Column(13, runway.length.toFixed(0), Column.right, Column.cyan),
+                            new Column(14, "M", Column.small, Column.cyan)
                         ];
-                        rows[2 * i + 1] = ["{sp}{sp}{sp}{sp}" + Utils.leadingZeros(Math.round((runway.direction)), 3) + "[color]cyan",];
+                        rows[2 * i + 1] = [new Column(3, Utils.leadingZeros(Math.round((runway.direction)), 3), Column.cyan)];
                         mcdu.onLeftInput[i + 1] = async () => {
                             mcdu.setOriginRunwayIndex(index, () => {
                                 CDUAvailableDeparturesPage.ShowPage(mcdu, airport, 0, true);
@@ -59,7 +59,7 @@ class CDUAvailableDeparturesPage {
                 }
             } else {
                 doInsertRunwayOnly = true;
-                insertRow = ["{ERASE[color]amber", "INSERT*[color]amber"];
+                insertRow = [new Column(0, "{ERASE", Column.amber), new Column(23, "INSERT*", Column.amber, Column.right)];
                 mcdu.onRightInput[5] = () => {
                     mcdu.insertTemporaryFlightPlan(() => {
                         mcdu.updateConstraints();
@@ -71,7 +71,7 @@ class CDUAvailableDeparturesPage {
                 };
                 let rowIndex = -pageCurrent + 1;
                 let index = 0;
-                rows[0] = ["{NONE[color]cyan"];
+                rows[0] = [new Column(0, "{NONE", Column.cyan)];
                 mcdu.onLeftInput[rowIndex + 1] = () => {
                     mcdu.setDepartureIndex(-1, () => {
                         CDUAvailableDeparturesPage.ShowPage(mcdu, airport);
@@ -97,7 +97,7 @@ class CDUAvailableDeparturesPage {
                         }
                         if (sidMatchesSelectedRunway) {
                             if (rowIndex >= 1) {
-                                rows[2 * rowIndex] = ["{" + sid.name + "[color]cyan"];
+                                rows[2 * rowIndex] = [new Column(0, "{" + sid.name, Column.cyan)];
                                 mcdu.onLeftInput[rowIndex + 1] = () => {
                                     mcdu.setRunwayIndex(transitionIndex, (success) => {
                                         mcdu.setDepartureIndex(scopout, () => {
@@ -115,7 +115,7 @@ class CDUAvailableDeparturesPage {
                         const enRouteTransitionIndex = i + pageCurrent;
                         const enRouteTransition = selectedDeparture.enRouteTransitions[enRouteTransitionIndex];
                         if (enRouteTransition) {
-                            rows[2 * i][1] = enRouteTransition.name + "}[color]cyan";
+                            rows[2 * i] += [new Column(23, enRouteTransition.name + "}", Column.right, Column.cyan)];
                             mcdu.onRightInput[i + 1] = () => {
                                 mcdu.flightPlanManager.setDepartureEnRouteTransitionIndex(enRouteTransitionIndex, () => {
                                     CDUAvailableDeparturesPage.ShowPage(mcdu, airport, 0, true);
@@ -169,16 +169,27 @@ class CDUAvailableDeparturesPage {
                 down = true;
             }
             mcdu.setArrows(up, down, true, true);
-            mcdu.setTemplate([
+            mcdu.setTemplate(FormatTemplate([
                 // ["DEPARTURES {small}FROM{end} {green}" + airport.ident + "{end}"],
-                formatLine(
+                [
                     new Column(1, "DEPARTURES"),
-                    new Column(12, "FROM", false, true),
-                    new Column(17, airport.ident, false, false, "green")
-                ),
-                ["{sp}RWY", "TRANS{sp}", "{sp}SID"],
-                [selectedRunwayCell + "[color]" + selectedRunwayCellColor, selectedTransCell + "[color]" + selectedTransCellColor, selectedSidCell + "[color]" + selectedSidCellColor],
-                sidSelection ? ["SIDS", "TRANS", "AVAILABLE"] : ["", "", "RUNWAYS AVAILABLE"],
+                    new Column(12, "FROM", Column.small),
+                    new Column(17, airport.ident, Column.green)
+                ],
+                //["{sp}RWY", "TRANS{sp}", "{sp}SID"],
+                [
+                    new Column(1, "RWY"),
+                    new Column(10, "SID"),
+                    new Column(18, "TRANS")
+                ],
+                //[selectedRunwayCell + "[color]" + selectedRunwayCellColor, selectedTransCell + "[color]" + selectedTransCellColor, selectedSidCell + "[color]" + selectedSidCellColor],
+                [
+                    new Column(0, selectedRunwayCell, selectedRunwayCellColor),
+                    new Column(8, selectedSidCell, selectedSidCellColor),
+                    new Column(18, selectedTransCell, selectedTransCellColor)
+                ],
+                //sidSelection ? ["SIDS", "TRANS", "AVAILABLE"] : ["", "", "AVAILABLE RUNWAYS"],
+                sidSelection ? [new Column(0, "SIDS"), new Column(7, "AVAILABLE"), new Column(19, "TRANS")] : [new Column(3, "AVAILABLE RUNWAYS")],
                 rows[0],
                 rows[1],
                 rows[2],
@@ -188,7 +199,7 @@ class CDUAvailableDeparturesPage {
                 rows[6],
                 rows[7],
                 insertRow
-            ]);
+            ]));
             mcdu.onPrevPage = () => {
                 CDUAvailableDeparturesPage.ShowPage(mcdu, airport, 0, !sidSelection);
             };

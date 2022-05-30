@@ -1,10 +1,10 @@
 class Column {
-    constructor(index, text, isRightAligned = false, isTextSmall = false, color = "white") {
+    constructor(index, text, ...att) {
         this.raw = text;
-        this.color = color;
+        this.color = (att.find(e => e.color) || Column.white).color;
         this.length = text.length;
-        this.anchorPos = isRightAligned ? index - this.length + 1 : index;
-        this.size = isTextSmall ? ["{small}", "{end}"] : ["", ""];
+        this.anchorPos = !!att.find(e => e.align) ? index - this.length + 1 : index;
+        this.size = !!att.find(e => e.size) ? ["{small}", "{end}"] : ["", ""];
     }
 
     get text() {
@@ -12,21 +12,30 @@ class Column {
     }
 }
 
+Column.right = { "align": true };
+Column.small = { "size": true };
+Column.amber = { "color": "amber"};
+Column.red = { "color": "red"};
+Column.green = { "color": "green"};
+Column.cyan = { "color": "cyan"};
+Column.white = { "color": "white"};
+Column.magenta = { "color": "magenta"};
+Column.yellow = { "color": "yellow"};
+Column.inop = { "color": "inop"};
+
 /**
  * Returns a formatted mcdu page template
  * @param lines {array[Column[]]} mcdu lines
  * @returns {string[]} mcdu template
  */
-function formatTemplate(lines) {
-    return lines.map(line => formatLine(...line));
-}
+const FormatTemplate = lines => lines.map(line => FormatLine(...line));
 
 /**
  * Returns a formatted mcdu line
  * @param params {Column}
  * @returns {string[]}
  */
-function formatLine(...params) {
+function FormatLine(...params) {
     params.sort((a, b) => a.anchorPos - b.anchorPos);
 
     let line = "".padStart(24);

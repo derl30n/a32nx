@@ -11,24 +11,24 @@ class CDUMenuPage {
 
         const updateView = () => {
             const getText = (name, isSelected, extra = "", isLeft = true) => isSelected ? (isLeft ? name + " (SEL)" : "(SEL) " + name) : name + extra;
-            const getColor = (system, isSelected) => isSelected ? "cyan" : system === activeSystem ? "green" : "white";
+            const getColor = (system, isSelected) => isSelected ? Column.cyan : system === activeSystem ? Column.green : Column.white;
 
-            mcdu.setTemplate(formatTemplate([
+            mcdu.setTemplate(FormatTemplate([
                 [new Column(7, "MCDU MENU")],
-                [new Column(22, "SELECT", true)],
+                [new Column(22, "SELECT", Column.right)],
                 [
-                    new Column(0, getText("<FMGC", selectedFMGC, " (REQ)"), false, false, getColor("FMGC", selectedFMGC)),
-                    new Column(23, "NAV B/UP>", true)
+                    new Column(0, getText("<FMGC", selectedFMGC, " (REQ)"), getColor("FMGC", selectedFMGC)),
+                    new Column(23, "NAV B/UP>", Column.right)
                 ],
                 [""],
-                [new Column(0, getText("<ATSU", selectedATSU), false, false, getColor("ATSU", selectedATSU))],
+                [new Column(0, getText("<ATSU", selectedATSU), getColor("ATSU", selectedATSU))],
                 [""],
-                [new Column(0, getText("<AIDS", selectedAIDS), false, false, getColor("AIDS", selectedAIDS))],
+                [new Column(0, getText("<AIDS", selectedAIDS), getColor("AIDS", selectedAIDS))],
                 [""],
-                [new Column(0, getText("<CFDS", selectedCFDS), false, false, getColor("CFDS", selectedCFDS))],
+                [new Column(0, getText("<CFDS", selectedCFDS), getColor("CFDS", selectedCFDS))],
                 [""],
                 [""],
-                //[new Column(0, getText("MCDU MAINT>", selectedMaint, "", false), true, false, getColor("MAINT", selectedMaint))],
+                //[new Column(0, getText("MCDU MAINT>", selectedMaint, "", false), Column.right, getColor("MAINT", selectedMaint))],
                 [""],
                 [""]
             ]));
