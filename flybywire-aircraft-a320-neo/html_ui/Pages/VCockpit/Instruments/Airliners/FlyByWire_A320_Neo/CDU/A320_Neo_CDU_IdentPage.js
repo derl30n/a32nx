@@ -72,33 +72,73 @@ class CDUIdentPage {
         mcdu.clearDisplay();
         mcdu.page.Current = mcdu.page.IdentPage;
         mcdu.activeSystem = 'FMGC';
-        mcdu.setTemplate([
-            ["A320-200"],//This aircraft code is correct and does not include the engine type.
-            ["\xa0ENG"],
-            ["LEAP-1A26[color]green"],
-            ["\xa0ACTIVE NAV DATA BASE"],
-            ["\xa0" + calculateActiveDate(date) + "[color]cyan", "AIRAC[color]green"],
-            ["\xa0SECOND NAV DATA BASE"],
-            ["{small}{" + calculateSecDate(date) + "{end}[color]inop"],
-            ["", "STORED\xa0\xa0\xa0\xa0"],
-            ["", `{green}${stored.routes.toFixed(0).padStart(2, '0')}{end}{small}RTES{end}\xa0{green}${stored.runways.toFixed(0).padStart(2, '0')}{end}{small}RWYS{end}`],
-            ["CHG CODE", `{green}{big}${stored.waypoints.toFixed(0).padStart(2, '0')}{end}{end}{small}WPTS{end}\xa0{green}{big}${stored.navaids.toFixed(0).padStart(2, '0')}{end}{end}{small}NAVS{end}`],
-            ["{small}[  ]{end}[color]inop", confirmDeleteAll ? '{amber}CONFIRM DEL*{end}' : '{cyan}DELETE ALL}{end}'],
-            ["IDLE/PERF", "SOFTWARE"],
-            ["+0.0/+0.0[color]green", "STATUS/XLOAD>[color]inop"]
-        ]);
+        const deleteAll = new Column(23, "DELETE ALL}", Column.cyan, Column.right);
+        if (confirmDeleteAll) {
+            deleteAll.update("CONFIRM DEL*", Column.amber);
+        }
+
+        mcdu.setTemplate(FormatTemplate([
+            [
+                new Column(8, "A320-200") //This aircraft code is correct and does not include the engine type.
+            ],
+            [
+                new Column(1, "ENG")
+            ],
+            [
+                new Column(0, "LEAP-1A26", Column.green)
+            ],
+            [
+                new Column(1, "ACTIVE NAV DATA BASE")
+            ],
+            [
+                new Column(1, calculateActiveDate(date), Column.cyan),
+                new Column(23, "AIRAC", Column.green, Column.right)
+            ],
+            [
+                new Column(1, "SECOND NAV DATA BASE")
+            ],
+            [
+                new Column(0, "{"),
+                new Column(1, calculateSecDate(date), Column.inop, Column.small)
+            ],
+            [
+                new Column(14, "STORED")
+            ],
+            [
+                new Column(20, "RWYS", Column.small),
+                new Column(18, stored.runways.toFixed(0).padStart(2, '0'), Column.green),
+                new Column(14, "RTES", Column.small),
+                new Column(12, stored.routes.toFixed(0).padStart(2, '0'), Column.green)
+            ],
+            [
+                new Column(0, "CHG CODE"),
+                new Column(20, "NAVS"),
+                new Column(18, stored.navaids.toFixed(0).padStart(2, '0'), Column.green, Column.big),
+                new Column(14, "WPTS"),
+                new Column(12, stored.waypoints.toFixed(0).padStart(2, '0'), Column.green, Column.big)
+            ],
+            [
+                new Column(0, "[  ]", Column.inop, Column.small),
+                deleteAll
+            ],
+            [
+                new Column(0, "IDLE/PERF"),
+                new Column(16, "SOFTWARE")
+            ],
+            [
+                new Column(0, "+0.0/+0.0", Column.green),
+                new Column(11, "STATUS/XLOAD>", Column.inop)
+            ]
+        ]));
 
         // DELETE ALL
         mcdu.onRightInput[4] = () => {
             if (confirmDeleteAll) {
-                const allDeleted = mcdu.dataManager.deleteAllStoredWaypoints();
-                if (!allDeleted) {
+                if (!mcdu.dataManager.deleteAllStoredWaypoints()) {
                     mcdu.setScratchpadMessage(NXSystemMessages.fplnElementRetained);
                 }
-                CDUIdentPage.ShowPage(mcdu);
-            } else {
-                CDUIdentPage.ShowPage(mcdu, true);
             }
+            CDUIdentPage.ShowPage(mcdu, !confirmDeleteAll);
         };
     }
 }
